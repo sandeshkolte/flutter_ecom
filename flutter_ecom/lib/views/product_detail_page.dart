@@ -62,7 +62,7 @@ Container(width: (context).screenWidth,
   child: Flex(direction: Axis.vertical,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-    "Only ${product.stock} left in stock".text.lg.bold.red500.make(),
+   product.stock<=0? "Out of Stock".text.lg.bold.red500.make() : product.stock==1? "Only ${product.stock} left in stock".text.lg.bold.red500.make() : "Only ${product.stock} left in stock".text.lg.bold.emerald500.make(),
     ElevatedButton(onPressed: null, child: product.category.text.black.make(),).py4(),
 
   ],),

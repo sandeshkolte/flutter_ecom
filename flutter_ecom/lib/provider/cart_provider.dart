@@ -22,11 +22,13 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
   void removeFromCart(String productId) {
     _shoppingCart.removeWhere((elem) => elem.id == productId);
 
     notifyListeners();
   }
+
 
   void incrementQty(String productId) {
     CartModel item = _shoppingCart.where((elem) => elem.id == productId).first;

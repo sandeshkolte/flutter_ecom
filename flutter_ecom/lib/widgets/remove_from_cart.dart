@@ -30,7 +30,7 @@ class RemoveFromCart extends StatelessWidget {
           // },
           style: const ButtonStyle(
               shape: WidgetStatePropertyAll(StadiumBorder()),
-              backgroundColor: WidgetStatePropertyAll(Vx.slate200)),
+              backgroundColor: WidgetStatePropertyAll(Vx.slate100)),
           child:
               "remove".text.black.make()
               );

@@ -46,13 +46,12 @@ class _HomePageState extends State<HomePage> {
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.category),
-              label: 'Categories',
+              label: 'Orders',
             ),
             BottomNavigationBarItem(
               icon: const Icon(CupertinoIcons.cart).badge(
                 position: VxBadgePosition.right,
                 count: _cartProvider.shoppingCart.length,
-                color: Colors.transparent,
                 size: 20,
                 textStyle: const TextStyle(
                   fontSize: 12,
@@ -68,9 +67,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Vx.slate200,
+          backgroundColor: Vx.slate100,
           currentIndex: value,
-          selectedItemColor: Vx.slate800,
+          selectedItemColor: Colors.deepPurple,
           unselectedItemColor: Vx.slate500,
           showUnselectedLabels: false,
           useLegacyColorScheme: true,

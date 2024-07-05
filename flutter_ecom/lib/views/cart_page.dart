@@ -284,7 +284,7 @@ class _CartTotalState extends State<_CartTotal> {
                   final amount = value.cartTotal * 100;
 
                   var options = {
-                    'key': 'rzp_live_ILgsfZCZoFIKMb',
+                    'key': 'rzp_test_9B43leN3Ot65ew',
                     'amount': amount,
                     'name': 'Silver Road',
                     'description': 'A one stop shopping platform',
