@@ -1,0 +1,56 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_ecom/provider/cart_provider.dart';
+import 'package:flutter_ecom/provider/imageurl_provider.dart';
+import 'package:flutter_ecom/views/cart_page.dart';
+import 'package:flutter_ecom/views/homepage.dart';
+import 'package:flutter_ecom/views/init_page.dart';
+import 'package:flutter_ecom/views/orders_page.dart';
+import 'package:flutter_ecom/views/profile_page.dart';
+// import 'package:flutter_ecom/views/login_page.dart';
+// import 'package:flutter_ecom/views/register_page.dart';
+import 'package:flutter_ecom/views/shop_page.dart';
+import 'package:provider/provider.dart';
+import 'firebase_options.dart';
+import 'theme/themes.dart';
+import 'views/auth_screen/login_page.dart';
+import 'views/auth_screen/register_page.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ImageUrlProvider()),
+      ChangeNotifierProvider(create: (_) => CartProvider())
+    ],
+    child: const MyApp(),
+  ));
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.light,
+      theme: MyTheme.lightTheme(context),
+      darkTheme: MyTheme.darkTheme(context),
+      initialRoute: '/home',
+      routes: {
+        '/': (context) => const InitPage(),
+        '/register': (context) => const RegisterPage(),
+        '/login': (context) => const Loginpage(),
+        '/home': (context) => HomePage(),
+        '/orders': (context) => const OrdersPage(),
+        '/profile': (context) => const ProfilePage(),
+        '/shop': (context) => const ShopPage(),
+        '/cart': (context) => const CartPage(),
+      },
+    );
+  }
+}
