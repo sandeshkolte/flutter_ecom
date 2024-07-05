@@ -59,12 +59,11 @@ const updateProduct = async (req, res) => {
       category,
     } = req.body;
 
-    let product = await productModel.findById(req.params._id);
+    let product = await productModel.findOne({ _id: req.params.id });
 
     if (!product) return res.status(404).json({ status: "Error", response: "Product not found" });
 
-    let updatedProduct = await productModel.findByIdAndUpdate(
-      req.params._id,
+    let updatedProduct = await productModel.findOneAndUpdate({ _id: req.params.id },
       {
         image,
         name,

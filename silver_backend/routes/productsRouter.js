@@ -5,6 +5,6 @@ const router = express.Router()
 
 router.get('/',getProduct)
 router.post('/create', createProduct)
-router.post('/update:productid', updateProduct)
+router.post('/update/:id', updateProduct)
 
 module.exports = router
