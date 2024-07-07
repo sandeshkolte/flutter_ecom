@@ -11,12 +11,16 @@ const getProduct = async (req, res) => {
 
 const findProduct = async (req, res) => {
   try {
-    let products = await productModel.find({_id: req.params.id});
-    res.status(200).json({status:"success",response: products});
+    const product = await productModel.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ status: "Error", response: "Product not found" });
+    }
+    res.status(200).json({ status: "success", response: product });
   } catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
 };
+
 
 const createProduct = async (req, res) => {
   try {
