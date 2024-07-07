@@ -9,6 +9,14 @@ const getProduct = async (req, res) => {
   }
 };
 
+const findProduct = async (req, res) => {
+  try {
+    let products = await productModel.find({_id: req.params.id});
+    res.status(200).json({status:"success",response: products});
+  } catch (err) {
+    res.status(400).json({ status: "Error", response: err.message });
+  }
+};
 
 const createProduct = async (req, res) => {
   try {
@@ -84,4 +92,4 @@ const updateProduct = async (req, res) => {
   }
 };
 
-module.exports = { createProduct, updateProduct, getProduct };
+module.exports = { createProduct, updateProduct, getProduct,findProduct };
