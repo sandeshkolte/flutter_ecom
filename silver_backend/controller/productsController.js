@@ -1,4 +1,5 @@
 const productModel = require('../models/product');
+const mongoose = require('mongoose'); 
 
 const getProduct = async (req, res) => {
   try {
@@ -9,18 +10,26 @@ const getProduct = async (req, res) => {
   }
 };
 
+
 const findProduct = async (req, res) => {
   try {
-    const product = await productModel.findById(req.params.id);
+    const id = req.params.id || req.query.id; // Support both route and query parameters
+    console.log(`Finding product with ID: ${id}`);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ status: "Error", response: "Invalid product ID" });
+    }
+
+    const product = await productModel.findById(id);
     if (!product) {
       return res.status(404).json({ status: "Error", response: "Product not found" });
     }
+
     res.status(200).json({ status: "success", response: product });
   } catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
 };
-
 
 const createProduct = async (req, res) => {
   try {
@@ -60,34 +69,22 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const {
-      image,
-      name,
-      price,
-      discount,
-      description,
-      seller,
-      stock,
-      category,
-    } = req.body;
+    const updates = req.body;
+    console.log(`Updating product with ID: ${req.params.id}`);
+    
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ status: "Error", response: "Invalid product ID" });
+    }
 
-    let product = await productModel.findOne({ _id: req.params.id });
-
-    if (!product) return res.status(404).json({ status: "Error", response: "Product not found" });
-
-    let updatedProduct = await productModel.findOneAndUpdate({ _id: req.params.id },
-      {
-        image,
-        name,
-        price,
-        discount,
-        description,
-        seller,
-        stock,
-        category
-      },
-      { new: true } // To return the updated document
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      req.params.id,
+      { $set: updates },
+      { new: true }
     );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ status: "Error", response: "Product not found" });
+    }
 
     res.status(200).json({ status: "success", response: updatedProduct });
 
@@ -95,5 +92,6 @@ const updateProduct = async (req, res) => {
     res.status(400).json({ status: "Error", response: err.message });
   }
 };
+
 
 module.exports = { createProduct, updateProduct, getProduct,findProduct };

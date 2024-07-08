@@ -6,12 +6,15 @@ const appLogger = require('./middlewares/appLogger');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const db = require('./config/mongoose-config');
+const productModel = require('./models/product');
+const product = require('./models/product');
 
 const app = express();
 const PORT = process.env.PORT || 9000;
 
 // Middleware
 app.use(cors());
+app.set("view engine", "ejs")
 require('dotenv').config();
 app.use(appLogger);
 app.use(cookieParser());
@@ -31,6 +34,47 @@ db.on('disconnected', () => {
 });
 
 // Routes
+app.get('/',async(req,res)=>{
+  let products = await productModel.find();
+
+    res.render("panel",{
+        products
+    })
+})
+
+app.get('/edit/:id',async (req,res)=>{
+
+  let product = await productModel.findOne({_id:req.params.id});
+  
+      res.render("edit",{
+          product
+      })
+      console.log(product)
+  })
+
+  app.post('/update/:id',async (req,res)=>{
+
+    let {  image,
+      name,
+      price,
+      discount,
+      description,
+      seller,
+      stock,
+      category} = req.body
+    
+    let updatedProduct = await userModel.findOneAndUpdate({_id:req.params.id},{  image,
+      name,
+      price,
+      discount,
+      description,
+      seller,
+      stock,
+      category},{new:true});
+       res.redirect('/')
+    })
+  
+
 app.use('/users', userRouter);
 app.use('/products', productsRouter);
 app.use('/owner', ownersRouter);

@@ -29,7 +29,6 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void incrementQty(String productId) {
     CartModel item = _shoppingCart.where((elem) => elem.id == productId).first;
     if(item.quantity< item.items.stock) {
