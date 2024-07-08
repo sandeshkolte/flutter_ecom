@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Edit Product</title>
+</head>
+<body>
+    <div class="w-full h-full  p-10 ">
+        <!-- <a href="/read" class="text-blue-500 py-10">View Users</a> -->
+<h1 class="text-3xl tracking-tighter mb-3">Update User</h1>
+<form action="/update/<%=product._id%>" method="post">
+    <div class="flex flex-wrap gap-3">
+        <label for="name">Name</label>
+        <input type="text" placeholder="name" value="<%=product.name%>" name="name" class="px-5 py-2 bg-transparent border-2 border-zinc-800 rounded-lg outlined-none ">
+        <label for="name">Description</label>
+        <input type="text" placeholder="description" value="<%=product.description%>" name="description" class="px-5 py-2 bg-transparent border-2 border-zinc-800 rounded-lg outlined-none ">
+        <label for="price">Price</label>
+        <input type="number" placeholder="price" value="<%=product.price%>" name="price" class="px-5 py-2 bg-transparent border-2 border-zinc-800 rounded-lg outlined-none ">
+        <label for="discount">Discount</label>
+        <input type="number" placeholder="discount" value="<%=product.discount%>" name="discount" class="px-5 py-2 bg-transparent border-2 border-zinc-800 rounded-lg outlined-none ">
+        <label for="stock">Stock</label>
+        <input type="number" placeholder="stock" value="<%=product.stock%>" name="stock" class="px-5 py-2 bg-transparent border-2 border-zinc-800 rounded-lg outlined-none ">
+        <label for="seller">Seller</label>
+        <input type="text" placeholder="seller" value="<%=product.seller%>" name="seller" class="px-5 py-2 bg-transparent border-2 border-zinc-800 rounded-lg outlined-none ">
+        <label for="category">Category</label>
+        <input type="text" placeholder="category" value="<%=product.category%>" name="category" class="px-5 py-2 bg-transparent border-2 border-zinc-800 rounded-lg outlined-none ">    
+    </div>
+     <!-- <input type="text" placeholder="image url" value="<%=product.image%>" name="image" class="px-5 py-2 bg-transparent border-2 border-zinc-800 rounded-lg outlined-none "> -->
+    <input class="m-5 bg-yellow-500 px-5 py-2 rounded-lg" type="submit" value="Update Product">
+</form>
+    </div>
+</body>
+</html>
