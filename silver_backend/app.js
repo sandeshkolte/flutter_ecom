@@ -7,7 +7,6 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const db = require('./config/mongoose-config');
 const productModel = require('./models/product');
-const product = require('./models/product');
 
 const app = express();
 const PORT = process.env.PORT || 9000;
@@ -63,7 +62,7 @@ app.get('/edit/:id',async (req,res)=>{
       stock,
       category} = req.body
     
-    let updatedProduct = await userModel.findOneAndUpdate({_id:req.params.id},{  image,
+    let updatedProduct = await productModel.findOneAndUpdate({_id:req.params.id},{  image,
       name,
       price,
       discount,
