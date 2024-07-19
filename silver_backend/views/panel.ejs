@@ -12,6 +12,7 @@
             <h1 class="flex justify-center text-3xl font-bold m-10" >Admin Panel</h1>
         </header>
         <section>
+            <div class="flex justify-end mr-5 mb-5"><a class="px-2 py-1 bg-slate-700 rounded-lg text-white" href="/createproduct">Create Product</a> </div>
 <div class="flex flex-wrap gap-2">
     <%products.forEach((product)=>{%>
         <% if(products.length>0){ %>
@@ -28,8 +29,12 @@
                 <h3 class="text-lg px-5"><%= product.category%></h3>
              
                     <div class="">
-                        <a class="text-slate-400" href="/edit/<%= product._id%>">Edit</a>
-                        <a class="text-red-500" href="/delete/<%= product._id%>">Delete</a>
+                        <div class="">
+                            <a class="bg-teal-700 px-2 rounded-lg text-white" href="/products/edit/<%= product._id%>">Edit</a>
+                        </div>
+                        <div class="mt-5">
+                            <a class="bg-red-500 px-2 rounded-lg text-white" href="/delete/<%= product._id%>">Delete</a>
+                        </div>
                     </div>
                 
             </div>

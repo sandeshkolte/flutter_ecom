@@ -2,12 +2,14 @@ const express = require('express');
 const userRouter = require('./routes/usersRouter');
 const productsRouter = require('./routes/productsRouter');
 const ownersRouter = require('./routes/ownersRouter');
+const indexRouter = require('./routes/indexRouter');
 const appLogger = require('./middlewares/appLogger');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const db = require('./config/mongoose-config');
-const productModel = require('./models/product');
 
+
+// const upload = require('./config/multer-config')
 const app = express();
 const PORT = process.env.PORT || 9000;
 
@@ -32,51 +34,19 @@ db.on('disconnected', () => {
   console.log('Mongoose disconnected from MongoDB Atlas');
 });
 
-// Routes
-app.get('/',async(req,res)=>{
-  let products = await productModel.find();
 
-    res.render("panel",{
-        products
-    })
-})
-
-app.get('/edit/:id',async (req,res)=>{
-
-  let product = await productModel.findOne({_id:req.params.id});
-  
-      res.render("edit",{
-          product
-      })
-      console.log(product)
-  })
-
-  app.post('/update/:id',async (req,res)=>{
-
-    let {  image,
-      name,
-      price,
-      discount,
-      description,
-      seller,
-      stock,
-      category} = req.body
-    
-    let updatedProduct = await productModel.findOneAndUpdate({_id:req.params.id},{  image,
-      name,
-      price,
-      discount,
-      description,
-      seller,
-      stock,
-      category},{new:true});
-       res.redirect('/')
-    })
-  
-
+app.use('/',indexRouter);
 app.use('/users', userRouter);
 app.use('/products', productsRouter);
 app.use('/owner', ownersRouter);
+
+// app.post('/upload',upload.single('file'),async(req,res)=>{
+//   const name = saltedMd5(req.file.originalname, 'SUPER-S@LT!')
+//   const fileName = name + path.extname(req.file.originalname)
+//   await app.locals.bucket.file(fileName).createWriteStream().end(req.file.buffer)
+//   res.send('done');
+//   })
+
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server started on port ${PORT}`);

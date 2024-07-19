@@ -9,7 +9,7 @@ const createOwner = async (req, res) => {
     let owners = await ownerModel.find({ email })
     if (owners.length > 0)
         return res.status(401).json({ status: "Error", response: "You owner already exist" })
-
+    
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(password, salt, async (err, hash) => {
 
