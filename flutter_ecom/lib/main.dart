@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
 import 'package:flutter_ecom/provider/imageurl_provider.dart';
+import 'package:flutter_ecom/views/auth_screen/splash.dart';
 import 'package:flutter_ecom/views/cart_page.dart';
 import 'package:flutter_ecom/views/homepage.dart';
 import 'package:flutter_ecom/views/init_page.dart';
@@ -40,9 +41,10 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
       theme: MyTheme.lightTheme(context),
       darkTheme: MyTheme.darkTheme(context),
-      initialRoute: '/home',
+      initialRoute: '/splash',
       routes: {
         '/': (context) => const InitPage(),
+        '/splash': (context) => const SplashScreen(),
         '/register': (context) => const RegisterPage(),
         '/login': (context) => const Loginpage(),
         '/home': (context) => const HomePage(),
