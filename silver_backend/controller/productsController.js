@@ -63,7 +63,7 @@ const createProduct = async (req, res) => {
 
     // stream.on('finish', async () => {
       let {
-        name,
+        name,image,
         price,
         discount,
         description,
@@ -76,7 +76,7 @@ const createProduct = async (req, res) => {
 
       let product = new productModel({
         // image: fileName, // Save only the file name or URL if available
-        name,
+        name,image,
         price,
         discount,
         description,

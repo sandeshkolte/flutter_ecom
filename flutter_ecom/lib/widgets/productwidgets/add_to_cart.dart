@@ -23,12 +23,14 @@ class AddToCart extends StatelessWidget {
 
       return ElevatedButton(
           onPressed: () {
-            if(product.stock<=0) {
-             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                    "${product.name} Out of Stock",
-                  ),backgroundColor: Vx.rose500,));
-             return;
+            if (product.stock <= 0) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  "${product.name} Out of Stock",
+                ),
+                backgroundColor: Vx.rose500,
+              ));
+              return;
             }
 
             if (isInCart.isEmpty) {

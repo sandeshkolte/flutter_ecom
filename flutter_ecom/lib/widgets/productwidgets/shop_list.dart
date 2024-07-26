@@ -17,8 +17,7 @@ class ShopList extends StatelessWidget {
             itemBuilder: (context, index) {
               final product = ProductModel.items![index];
               return InkWell(
-                onTap: () =>
-                 Navigator.push(
+                onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductDetailPage(product: product),
@@ -36,8 +35,7 @@ class ShopList extends StatelessWidget {
             itemBuilder: (context, index) {
               final product = ProductModel.items![index];
               return InkWell(
-                onTap: () =>
-                Navigator.push(
+                onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductDetailPage(product: product),
@@ -50,7 +48,6 @@ class ShopList extends StatelessWidget {
   }
 }
 
-
 class ShopItem extends StatelessWidget {
   final Items product;
 
@@ -58,14 +55,13 @@ class ShopItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // final now = DateTime.now().add(const Duration(days: 5));
     // String formatter = DateFormat('EEE,MMMMd').format(now);
 
     var children2 = [
       Hero(
-          tag: Key(product.id.toString()),
-          child: ProductImage(image: product.image),
+        tag: Key(product.id.toString()),
+        child: ProductImage(image: product.image),
       ),
       Expanded(
         child: Column(
@@ -73,7 +69,11 @@ class ShopItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             product.name.text.lg.bold.color(context.primaryColor).make(),
-            product.description.text.lg.maxLines(2).overflow(TextOverflow.ellipsis).textStyle(context.captionStyle).make(),
+            product.description.text.lg
+                .maxLines(2)
+                .overflow(TextOverflow.ellipsis)
+                .textStyle(context.captionStyle)
+                .make(),
             10.heightBox,
             // Row(mainAxisAlignment: MainAxisAlignment.start,
             //   children: [
@@ -93,11 +93,13 @@ class ShopItem extends StatelessWidget {
               alignment: MainAxisAlignment.spaceBetween,
               buttonPadding: EdgeInsets.zero,
               children: [
-                Row(crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  "₹".text.make(),
-                  "${product.price}".text.bold.xl2.make(),
-                ],),
+                    "₹".text.make(),
+                    "${product.price}".text.bold.xl2.make(),
+                  ],
+                ),
                 AddToCart(product: product)
               ],
             ).pOnly(right: 8),
@@ -124,7 +126,6 @@ class ShopItem extends StatelessWidget {
         .rounded
         .square(180)
         .make()
-        .py4()
-    ;
+        .py4();
   }
 }

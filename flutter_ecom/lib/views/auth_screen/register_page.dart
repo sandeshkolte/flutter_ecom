@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_ecom/common/shared_pref.dart';
 import 'package:http/http.dart' as http;
 
 import '../../common/common.dart';
@@ -17,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
   final TextEditingController unameController = TextEditingController();
+  final sharedPref = SharedPref();
 
   @override
   void dispose() {
@@ -44,8 +46,10 @@ class _RegisterPageState extends State<RegisterPage> {
         );
 
         if (response.statusCode == 200) {
-          var data = jsonDecode(response.body.toString());
-          debugPrint(data.toString());
+          var decodedData = jsonDecode(response.body);
+          var uid = decodedData["response"]["createdUser"]["_id"];
+          debugPrint(uid);
+          sharedPref.setUid(uid);
           showSnakBar('Registration successful!', context);
           Navigator.pushNamed(context, '/home');
         } else {

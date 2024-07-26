@@ -7,21 +7,21 @@
     <title>Silver Admin</title>
 </head>
 <body>
-    <div>
+    <div class="bg-[#f5f5f5] h-screen w-full">
         <header>
-            <h1 class="flex justify-center text-3xl font-bold m-10" >Admin Panel</h1>
+            <h1 class="flex justify-center text-3xl font-bold p-10" >Admin Panel</h1>
         </header>
         <section>
             <div class="flex justify-end mr-5 mb-5"><a class="px-2 py-1 bg-slate-700 rounded-lg text-white" href="/createproduct">Create Product</a> </div>
 <div class="flex flex-wrap gap-2">
     <%products.forEach((product)=>{%>
         <% if(products.length>0){ %>
-            <div class="product flex w-full p-3 rounded-lg bg-slate-200">
-                <div class=" h-28 w-28 rounded-lg bg-zinc-500 overflow-hidden">
-                    <img src="<%=product.image%>" alt="image" class="w-full h-full object-cover object-center">
+            <div class="product grid grid-cols-10 w-full p-3 rounded-lg bg-white">
+                <div class=" w-28 rounded-lg bg-zinc-500 overflow-hidden">
+                    <img src="<%=product.image%>" alt="image" class="w-full h-full object-cover object-center col-span-2">
                 </div>
-                <h3 class="text-lg px-5"><%= product.name%></h3>
-                <h3 class="text-lg px-5"><%= product.description%></h3>
+                <h3 class="text-lg font-bold px-5"><%= product.name%></h3>
+                <h3 class="text-lg px-5 col-span-2"><%= product.description%></h3>
                 <h3 class="text-lg px-5"><%= product.seller%></h3>
                 <h3 class="text-lg px-5"><%= product.price%></h3>
                 <h3 class="text-lg px-5"><%= product.discount%></h3>

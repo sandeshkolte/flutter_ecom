@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
 import 'package:flutter_ecom/provider/imageurl_provider.dart';
+import 'package:flutter_ecom/provider/order_provider.dart';
 import 'package:flutter_ecom/views/auth_screen/splash.dart';
 import 'package:flutter_ecom/views/cart_page.dart';
 import 'package:flutter_ecom/views/homepage.dart';
@@ -25,7 +26,8 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ImageUrlProvider()),
-      ChangeNotifierProvider(create: (_) => CartProvider())
+      ChangeNotifierProvider(create: (_) => CartProvider()),
+      ChangeNotifierProvider(create: (_) => OrderProvider())
     ],
     child: const MyApp(),
   ));

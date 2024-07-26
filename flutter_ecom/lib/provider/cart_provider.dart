@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ecom/common/shared_pref.dart';
 import 'package:flutter_ecom/models/cart_model.dart';
 import 'package:flutter_ecom/models/product_model.dart';
+import 'package:http/http.dart' as http;
+import '../common/common.dart';
 
 class CartProvider extends ChangeNotifier {
   late Items product;
@@ -9,12 +12,71 @@ class CartProvider extends ChangeNotifier {
 
   List<CartModel> get shoppingCart => _shoppingCart;
 
-  void addToCart(Items product) {
+final sharedPref = SharedPref();
+
+  Future<void> add(productId) async {
+
+    final userId = await sharedPref.getUid();
+
+    try {
+      final response = await http.post(Uri.parse('$baseUrl/users/addtocart?id=$productId&userid=$userId'));
+
+      if (response.statusCode == 200) {
+        debugPrint(response.body.toString());
+        // final decodedData = jsonDecode(response.body);
+        // final productsData = decodedData["response"];
+        // if (productsData is List) {
+        //   ProductModel.items =
+        //       productsData.map<Items>((item) => Items.fromMap(item)).toList();
+        // } else {
+        //   debugPrint("No Data: productsData is not a List");
+        // }
+      } else {
+        debugPrint("Response failed with code ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint('Failed to Load data: $e');
+    }
+  }
+
+  Future<void> remove(productId) async {
+
+    final userId = await sharedPref.getUid();
+
+    try {
+      final response = await http.post(Uri.parse('$baseUrl/users/removecart?id=$productId&userid=$userId'));
+
+      if (response.statusCode == 200) {
+        debugPrint(response.body.toString());
+        // final decodedData = jsonDecode(response.body);
+        // final productsData = decodedData["response"];
+        // if (productsData is List) {
+        //   ProductModel.items =
+        //       productsData.map<Items>((item) => Items.fromMap(item)).toList();
+        // } else {
+        //   debugPrint("No Data: productsData is not a List");
+        // }
+      } else {
+        debugPrint("Response failed with code ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint('Failed to Load data: $e');
+    }
+  }
+
+  void addToCart(Items product) async{
+
+    final userId = await sharedPref.getUid();
+    debugPrint(userId);
+
     var isExist = _shoppingCart.where((elem) => elem.id == product.id);
 
     if (isExist.isEmpty) {
-      _shoppingCart
-          .add(CartModel(id: product.id, items: product, quantity: 1));
+      _shoppingCart.add(CartModel(id: product.id, items: product, quantity: 1));
+
+      if (userId != null) {
+        add(product.id);
+      }
     } else {
       isExist.first.quantity += 1;
     }
@@ -22,16 +84,22 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
-  void removeFromCart(String productId) {
+  void removeFromCart(String productId) async{
     _shoppingCart.removeWhere((elem) => elem.id == productId);
+
+    final userId = await sharedPref.getUid();
+    debugPrint(userId);
+
+    if (userId != null) {
+      remove(productId);
+    }
 
     notifyListeners();
   }
 
   void incrementQty(String productId) {
     CartModel item = _shoppingCart.where((elem) => elem.id == productId).first;
-    if(item.quantity< item.items.stock) {
+    if (item.quantity < item.items.stock) {
       item.quantity++;
       notifyListeners();
     }
@@ -39,7 +107,7 @@ class CartProvider extends ChangeNotifier {
 
   void decrementQty(String productId) {
     CartModel item = _shoppingCart.where((elem) => elem.id == productId).first;
-    if(item.quantity>1) {
+    if (item.quantity > 1) {
       item.quantity--;
       notifyListeners();
     }
@@ -49,7 +117,8 @@ class CartProvider extends ChangeNotifier {
     double total = 0;
 
     for (var cartItem in _shoppingCart) {
-      total += (cartItem.items.price - cartItem.items.discount) * cartItem.quantity;
+      total +=
+          (cartItem.items.price - cartItem.items.discount) * cartItem.quantity;
     }
     return total;
   }
@@ -62,7 +131,6 @@ class CartProvider extends ChangeNotifier {
     }
     return total;
   }
-
 
   double get cartSubtotal => getCartTotal();
   double get cartDiscount => getCartDiscount();

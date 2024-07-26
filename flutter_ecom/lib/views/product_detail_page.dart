@@ -11,7 +11,6 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final mrpAmount = product.discount + product.price;
 
     return Scaffold(
@@ -25,12 +24,19 @@ class ProductDetailPage extends StatelessWidget {
           alignment: MainAxisAlignment.spaceBetween,
           buttonPadding: EdgeInsets.zero,
           children: [
-            Row(crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                mrpAmount.text.textStyle(const TextStyle(decoration: TextDecoration.lineThrough)).lg.make().pOnly(right: 5),
-              "₹".text.xl2.bold.green700.make(),
-              "${product.price}".text.bold.green700.xl4.make(),
-            ],),
+                mrpAmount.text
+                    .textStyle(
+                        const TextStyle(decoration: TextDecoration.lineThrough))
+                    .lg
+                    .make()
+                    .pOnly(right: 5),
+                "₹".text.xl2.bold.green700.make(),
+                "${product.price}".text.bold.green700.xl4.make(),
+              ],
+            ),
             AddToCart(product: product)
           ],
         ).p32(),
@@ -41,7 +47,8 @@ class ProductDetailPage extends StatelessWidget {
           children: [
             Hero(
                 tag: Key(product.id.toString()),
-                child: Image.network(product.image).centered().h32(context).p(5)),
+                child:
+                    Image.network(product.image).centered().h32(context).p(5)),
             Expanded(
                 child: VxArc(
               height: 20.0,
@@ -55,23 +62,46 @@ class ProductDetailPage extends StatelessWidget {
                     product.name.text.xl4.bold
                         .color(context.primaryColor)
                         .make(),
-                    product.description.text.lg.textStyle(context.captionStyle).make()
+                    product.description.text.lg
+                        .textStyle(context.captionStyle)
+                        .make()
                         .p32(),
-Container(width: (context).screenWidth,
-  margin: const EdgeInsets.symmetric(horizontal: 30),
-  child: Flex(direction: Axis.vertical,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-   product.stock<=0? "Out of Stock".text.lg.bold.red500.make() : product.stock==1? "Only ${product.stock} left in stock".text.lg.bold.red500.make() : "Only ${product.stock} left in stock".text.lg.bold.emerald500.make(),
-    ElevatedButton(onPressed: null, child: product.category.text.black.make(),).py4(),
-
-  ],),
-),
-                   Container(
+                    Container(
                       width: (context).screenWidth,
-                     margin: const EdgeInsets.symmetric(horizontal: 30),
+                      margin: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Flex(
+                        direction: Axis.vertical,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          product.stock <= 0
+                              ? "Out of Stock".text.lg.bold.red500.make()
+                              : product.stock == 1
+                                  ? "Only ${product.stock} left in stock"
+                                      .text
+                                      .lg
+                                      .bold
+                                      .red500
+                                      .make()
+                                  : "Only ${product.stock} left in stock"
+                                      .text
+                                      .lg
+                                      .bold
+                                      .emerald500
+                                      .make(),
+                          ElevatedButton(
+                            onPressed: null,
+                            child: product.category.text.black.make(),
+                          ).py4(),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: (context).screenWidth,
+                      margin: const EdgeInsets.symmetric(horizontal: 30),
                       height: 80,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),color: Vx.neutral100),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Vx.neutral100),
                       child: Row(
                         children: [
                           "Seller : ".text.xl.bold.make(),

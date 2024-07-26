@@ -13,7 +13,8 @@ class ProductImage extends StatelessWidget {
         .p3
         .color(context.canvasColor)
         .make()
-        .p8().hPCT(context: context, heightPCT: 100)
-        .wPCT(context: context, widthPCT: context.isMobile?40:20);
+        .p8()
+        .hPCT(context: context, heightPCT: 100)
+        .wPCT(context: context, widthPCT: context.isMobile ? 40 : 20);
   }
 }

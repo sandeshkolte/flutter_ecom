@@ -25,9 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          "Silver Road".text.fuchsia900.bold.lg.makeCentered()
-        ],
+        children: ["Silver Road".text.fuchsia900.bold.xl2.makeCentered()],
       )),
     );
   }

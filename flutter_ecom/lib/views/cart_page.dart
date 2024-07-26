@@ -1,40 +1,47 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
-import 'package:flutter_ecom/widgets/remove_from_cart.dart';
+import 'package:flutter_ecom/provider/order_provider.dart';
+import 'package:flutter_ecom/widgets/productwidgets/remove_from_cart.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
-
+import '../common/common.dart';
+import '../common/shared_pref.dart';
 import '../models/cart_model.dart';
+import '../models/product_model.dart';
 import '../widgets/productwidgets/product_image.dart';
+import 'package:http/http.dart' as http;
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
+  // var data;
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      backgroundColor: context.canvasColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        title: "Cart".text.color(context.primaryColor).make(),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          _CartList().p16().expand(),
-          Consumer<CartProvider>(
-              builder: (context, value, child) => value.shoppingCart.isNotEmpty
+        backgroundColor: context.canvasColor,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          title: "Cart".text.color(context.primaryColor).make(),
+          centerTitle: true,
+        ),
+        body: Consumer<CartProvider>(
+          builder: (context, value, child) => Column(
+            children: [
+              _CartList().p16().expand(),
+              value.shoppingCart.isNotEmpty
                   ? const PriceDetails()
-                  : "".text.make()),
-          const Divider(),
-          const _CartTotal(),
-        ],
-      ),
-    );
-  
+                  : "".text.make(),
+              const Divider(),
+              _CartTotal(value.product),
+            ],
+          ),
+        ));
   }
 }
 
@@ -223,21 +230,25 @@ class CartItem extends StatelessWidget {
   }
 }
 
-class _CartTotal extends StatefulWidget {
-  const _CartTotal();
+class _CartTotal extends StatelessWidget {
+  _CartTotal(this.product);
+  late Items product;
 
-  @override
-  State<_CartTotal> createState() => _CartTotalState();
-}
+  //  final OrderModel product;
 
-class _CartTotalState extends State<_CartTotal> {
   @override
   Widget build(BuildContext context) {
     Razorpay razorpay = Razorpay();
 
+    final orderProvider = Provider.of<OrderProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
+
     void handlePaymentSuccess(PaymentSuccessResponse response) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: "Payment Successful".text.make()));
+
+      orderProvider.orderList.addAll(cartProvider.shoppingCart);
+      orderProvider.addOrder(product);
     }
 
     void handlePaymentError(PaymentFailureResponse response) {
@@ -248,11 +259,11 @@ class _CartTotalState extends State<_CartTotal> {
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
 
-    @override
-    void dispose() {
-      razorpay.clear();
-      super.dispose();
-    }
+    // @override
+    // void dispose() {
+    //   razorpay.clear();
+    //   super.dispose();
+    // }
 
     return SizedBox(
       height: 100,

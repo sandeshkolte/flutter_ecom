@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
-import '../../models/product_model.dart';
+import '../../../models/product_model.dart';
 
 class RemoveFromCart extends StatelessWidget {
   final Items product;
@@ -20,7 +20,7 @@ class RemoveFromCart extends StatelessWidget {
       // final CartModel _cart = Provider.of(context);
 
       return ElevatedButton(
-        onPressed: () => value.removeFromCart(product.id),
+          onPressed: () => value.removeFromCart(product.id),
           // onPressed: () {
           //   debugPrint(isInCart.toString());
 
@@ -31,9 +31,7 @@ class RemoveFromCart extends StatelessWidget {
           style: const ButtonStyle(
               shape: WidgetStatePropertyAll(StadiumBorder()),
               backgroundColor: WidgetStatePropertyAll(Vx.slate100)),
-          child:
-              "remove".text.black.make()
-              );
+          child: "remove".text.black.make());
     });
   }
 }

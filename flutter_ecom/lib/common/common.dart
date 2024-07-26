@@ -4,4 +4,5 @@ void showSnakBar(String msg, BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
 }
 
-const baseUrl = "https://flutter-ecom.onrender.com";
+// const baseUrl = "https://flutter-ecom.onrender.com";
+const baseUrl = "http://192.168.1.8:3000";

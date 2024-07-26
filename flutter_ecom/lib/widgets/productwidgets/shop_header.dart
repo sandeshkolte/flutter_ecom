@@ -10,10 +10,10 @@ class ShopHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             "Silver Road".text.xl5.bold.color(context.primaryColor).make(),
-
           ],
         ),
         "Trending Products".text.xl2.make(),

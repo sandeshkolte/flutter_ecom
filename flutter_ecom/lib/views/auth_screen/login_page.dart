@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_ecom/common/shared_pref.dart';
 import 'package:http/http.dart' as http;
 
 import '../../common/common.dart';
@@ -18,6 +19,8 @@ class _LoginpageState extends State<Loginpage> {
 
   final TextEditingController passController = TextEditingController();
 
+  final sharedPref = SharedPref();
+
   Future<void> loginUser(String email, String pass) async {
     try {
       final response = await http.post(
@@ -32,8 +35,10 @@ class _LoginpageState extends State<Loginpage> {
       );
 
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body.toString());
-        debugPrint(data.toString());
+        var decodedData = jsonDecode(response.body);
+       var uid = decodedData["response"]["user"]["_id"];
+          debugPrint(uid);
+          sharedPref.setUid(uid);
         Navigator.pushNamed(context, '/home');
         showSnakBar('Registration successful!', context);
       } else {

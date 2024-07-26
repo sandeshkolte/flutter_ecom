@@ -74,21 +74,26 @@ class InitPageState extends State<InitPage> with TickerProviderStateMixin {
                 const SizedBox(
                   height: 20,
                 ),
-                FadeInUp(
-                    duration: const Duration(milliseconds: 1700),
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(50)),
-                      child: const Center(
-                        child: Text(
-                          "Create Account",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                InkWell(onTap: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+
+                  child: FadeInUp(
+                      duration: const Duration(milliseconds: 1700),
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Center(
+                          child: Text(
+                            "Create Account",
+                            style: TextStyle(
+                                color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                    )),
+                      )),
+                ),
                 const SizedBox(
                   height: 30,
                 ),
