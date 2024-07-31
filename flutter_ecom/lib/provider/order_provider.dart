@@ -24,6 +24,7 @@ class OrderProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         debugPrint(response.body.toString());
+        updateOrderStatus(productId);
       } else {
         debugPrint("Response failed with code ${response.statusCode}");
       }
@@ -37,7 +38,7 @@ class OrderProvider extends ChangeNotifier {
 
     try {
       final response = await http.post(
-          Uri.parse('$baseUrl/users/updateorder?id=$productId&userid=$userId'));
+          Uri.parse('$baseUrl/users/updateorder?orderId=$productId&userId=$userId'));
 
       if (response.statusCode == 200) {
         debugPrint(response.body.toString());
@@ -84,8 +85,7 @@ class OrderProvider extends ChangeNotifier {
       _orderList.add(CartModel(id: product.id, items: product, quantity: 1));
 
       if (userId != null) {
-        add(product.id);
-        updateOrderStatus(product.id);
+      await  add(product.id);
       }
     } else {
       isExist.first.quantity += 1;

@@ -15,33 +15,68 @@ import '../models/product_model.dart';
 import '../widgets/productwidgets/product_image.dart';
 import 'package:http/http.dart' as http;
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCart();
+  }
+
+  Future<void> getCart() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/products'));
+      debugPrint(response.body.toString());
+      if (response.statusCode == 200) {
+        final decodedData = jsonDecode(response.body);
+        final productsData = decodedData["response"];
+        if (productsData is List) {
+          CartModel.products =
+              productsData.map<Items>((item) => Items.fromMap(item)).toList();
+        } else {
+          debugPrint("No Data: productsData is not a List");
+        }
+        setState(() {});
+      } else {
+        debugPrint("Response failed with code ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint('Failed to Load data: $e');
+    }
+  }
 
   // var data;
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        backgroundColor: context.canvasColor,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          title: "Cart".text.color(context.primaryColor).make(),
-          centerTitle: true,
-        ),
-        body: Consumer<CartProvider>(
-          builder: (context, value, child) => Column(
-            children: [
-              _CartList().p16().expand(),
-              value.shoppingCart.isNotEmpty
+      backgroundColor: context.canvasColor,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        title: "Cart".text.color(context.primaryColor).make(),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          _CartList().p16().expand(),
+          Consumer<CartProvider>(
+              builder: (context, value, child) => value.shoppingCart.isNotEmpty
                   ? const PriceDetails()
-                  : "".text.make(),
-              const Divider(),
-              _CartTotal(value.product),
-            ],
-          ),
-        ));
+                  : "".text.make()),
+          const Divider(),
+          _CartTotal()
+          // Consumer<CartProvider>(
+          //     builder: (context, value, child) => _CartTotal(value.product)),
+        ],
+      ),
+    );
   }
 }
 
@@ -130,7 +165,30 @@ class _CartList extends StatelessWidget {
 class CartItem extends StatelessWidget {
   final CartModel product;
 
-  const CartItem({super.key, required this.product});
+  CartItem({super.key, required this.product});
+
+  var data;
+  Future<void> getCart() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/products'));
+      debugPrint(response.body.toString());
+      if (response.statusCode == 200) {
+        final decodedData = jsonDecode(response.body);
+        final productsData = decodedData["response"];
+        data = decodedData["response"];
+        if (productsData is List) {
+          CartModel.products =
+              productsData.map<Items>((item) => Items.fromMap(item)).toList();
+        } else {
+          debugPrint("No Data: productsData is not a List");
+        }
+      } else {
+        debugPrint("Response failed with code ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint('Failed to Load data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,81 +196,95 @@ class CartItem extends StatelessWidget {
     String formatter = DateFormat('EEE,MMMMd').format(now);
 
     var children2 = [
-      ProductImage(image: product.items.image),
-      Expanded(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            product.items.name.text.xl.bold.color(context.primaryColor).make(),
-            // product.items.description.text.lg.maxLines(2).overflow(TextOverflow.ellipsis).textStyle(context.captionStyle).make(),
-            // 10.heightBox,
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            //     "4.5".text.blue500.make().pOnly(right: 5),
-            //     VxRating(
-            //       onRatingUpdate: (value) {},
-            //       count: 5,maxRating: 10,
-            //       normalColor: Colors.grey,
-            //       selectionColor: Colors.yellow,
-            //       size: 20,
-            //     ),
-            //     "(2,643)".text.make().pOnly(left: 5)
-            //   ],
-            // ).py4(),
-            Consumer<CartProvider>(
-              builder: (context, value, child) => ButtonBar(
-                alignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                      onTap: () => value.decrementQty(product.id),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: Vx.slate200),
-                          child: const Icon(
-                            Icons.remove,
-                            size: 20,
-                          ).p2())),
-                  Text(product.quantity.toString()),
-                  InkWell(
-                      onTap: () => value.incrementQty(product.id),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: Vx.slate200),
-                          child: const Icon(
-                            Icons.add,
-                            size: 20,
-                          ).p2())),
-                ],
-              ),
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.spaceBetween,
-              buttonPadding: EdgeInsets.zero,
-              children: [
-                Row(
+      FutureBuilder(
+        future: getCart(),
+        builder: (context, snapshot) {
+          return Column(
+            children: [
+              ProductImage(image: data['image']),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    "₹".text.make(),
-                    "${product.items.price}".text.bold.xl2.make(),
-                  ],
-                ),
-                RemoveFromCart(product: product.items)
-              ],
-            ).pOnly(right: 8),
+                    data['name']
+                        .text
+                        .xl
+                        .bold
+                        .color(context.primaryColor)
+                        .make(),
+                    // product.items.description.text.lg.maxLines(2).overflow(TextOverflow.ellipsis).textStyle(context.captionStyle).make(),
+                    // 10.heightBox,
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   children: [
+                    //     "4.5".text.blue500.make().pOnly(right: 5),
+                    //     VxRating(
+                    //       onRatingUpdate: (value) {},
+                    //       count: 5,maxRating: 10,
+                    //       normalColor: Colors.grey,
+                    //       selectionColor: Colors.yellow,
+                    //       size: 20,
+                    //     ),
+                    //     "(2,643)".text.make().pOnly(left: 5)
+                    //   ],
+                    // ).py4(),
+                    Consumer<CartProvider>(
+                      builder: (context, value, child) => ButtonBar(
+                        alignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                              onTap: () => value.decrementQty(product.id),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      color: Vx.slate200),
+                                  child: const Icon(
+                                    Icons.remove,
+                                    size: 20,
+                                  ).p2())),
+                          Text(product.quantity.toString()),
+                          InkWell(
+                              onTap: () => value.incrementQty(product.id),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      color: Vx.slate200),
+                                  child: const Icon(
+                                    Icons.add,
+                                    size: 20,
+                                  ).p2())),
+                        ],
+                      ),
+                    ),
+                    ButtonBar(
+                      alignment: MainAxisAlignment.spaceBetween,
+                      buttonPadding: EdgeInsets.zero,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            "₹".text.make(),
+                            "${data['price']}".text.bold.xl2.make(),
+                          ],
+                        ),
+                        RemoveFromCart(product: product.items)
+                      ],
+                    ).pOnly(right: 8),
 
-            Row(
-              children: [
-                "FREE Delivery".text.make(),
-                formatter.text.bold.make().pOnly(left: 4)
-              ],
-            ).py(4)
-          ],
-        ).p(context.isMobile ? 2 : 16),
-      ),
+                    Row(
+                      children: [
+                        "FREE Delivery".text.make(),
+                        formatter.text.bold.make().pOnly(left: 4)
+                      ],
+                    ).py(4)
+                  ],
+                ).p(context.isMobile ? 2 : 16),
+              ),
+            ],
+          );
+        },
+      )
     ];
     return VxBox(
             child: context.isMobile
@@ -231,8 +303,8 @@ class CartItem extends StatelessWidget {
 }
 
 class _CartTotal extends StatelessWidget {
-  _CartTotal(this.product);
-  late Items product;
+  _CartTotal();
+  // late Items product;
 
   //  final OrderModel product;
 
@@ -248,7 +320,7 @@ class _CartTotal extends StatelessWidget {
           .showSnackBar(SnackBar(content: "Payment Successful".text.make()));
 
       orderProvider.orderList.addAll(cartProvider.shoppingCart);
-      orderProvider.addOrder(product);
+      orderProvider.addOrder(cartProvider.product);
     }
 
     void handlePaymentError(PaymentFailureResponse response) {

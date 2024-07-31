@@ -2,15 +2,15 @@ import 'dart:convert';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-class ProductModel {
-  static List<Items>? items = []; // Ensure it is not null
+// class ProductModel {
+//   static List<Items>? items = []; // Ensure it is not null
 
-  // Get item by id
-  Items? getById(String id) => items?.firstWhere((element) => element.id == id);
+//   // Get item by id
+//   Items? getById(String id) => items?.firstWhere((element) => element.id == id);
 
-  // Get item by position
-  Items getByPosition(int pos) => items![pos];
-}
+//   // Get item by position
+//   Items getByPosition(int pos) => items![pos];
+// }
 
 class Items {
   final String id;

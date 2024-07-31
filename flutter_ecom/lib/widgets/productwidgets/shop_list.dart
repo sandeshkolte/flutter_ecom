@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/models/product_model.dart';
+import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
+import '../../provider/product_provider.dart';
 import '../../views/product_detail_page.dart';
 import 'add_to_cart.dart';
 import 'product_image.dart';
@@ -10,41 +12,34 @@ class ShopList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return !context.isMobile
-        ? GridView.builder(
-            shrinkWrap: true,
-            itemCount: ProductModel.items!.length,
-            itemBuilder: (context, index) {
-              final product = ProductModel.items![index];
-              return InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailPage(product: product),
+    final productProvider = Provider.of<ProductProvider>(context);
+
+    return FutureBuilder(
+        future: productProvider.fetchProduct(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: productProvider.items.length,
+              itemBuilder: (context, index) {
+                final product = productProvider.items[index];
+                return InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailPage(product: product),
+                    ),
                   ),
-                ),
-                child: ShopItem(product: product),
-              );
-            },
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, crossAxisSpacing: 20),
-          )
-        : ListView.builder(
-            shrinkWrap: true,
-            itemCount: ProductModel.items!.length,
-            itemBuilder: (context, index) {
-              final product = ProductModel.items![index];
-              return InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailPage(product: product),
-                  ),
-                ),
-                child: ShopItem(product: product),
-              );
-            },
-          );
+                  child: ShopItem(product: product),
+                );
+              },
+            );
+          }
+        });
   }
 }
 

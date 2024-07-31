@@ -3,6 +3,7 @@ import 'package:flutter_ecom/models/product_model.dart';
 
 class CartModel {
   final String id;
+  static List<Items>? products = []; 
   Items items;
   int quantity;
   CartModel({
