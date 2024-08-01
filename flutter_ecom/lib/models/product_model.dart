@@ -16,8 +16,8 @@ class Items {
   final String id;
   final String image;
   final String name;
-  final String description;
   final num price;
+  final String description;
   final num discount;
   final num stock;
   final String seller;

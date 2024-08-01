@@ -5,7 +5,6 @@ import 'package:flutter_ecom/common/common.dart';
 import 'package:flutter_ecom/models/product_model.dart';
 import 'package:http/http.dart' as http;
 
-
 class ProductProvider with ChangeNotifier {
   // late Items product;
 

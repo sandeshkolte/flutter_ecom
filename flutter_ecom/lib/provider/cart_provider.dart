@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/common/shared_pref.dart';
 import 'package:flutter_ecom/models/cart_model.dart';
@@ -8,18 +10,44 @@ import '../common/common.dart';
 class CartProvider extends ChangeNotifier {
   late Items product;
 
-  final List<CartModel> _shoppingCart = [];
+  List<CartModel> _shoppingCart = [];
 
   List<CartModel> get shoppingCart => _shoppingCart;
 
-final sharedPref = SharedPref();
+  final sharedPref = SharedPref();
+
+  Future<void> fetchCart() async {
+    try {
+      final userId = await sharedPref.getUid();
+
+      final response =
+          await http.post(Uri.parse('$baseUrl/users/getcart?userid=$userId'));
+      debugPrint(response.body.toString());
+      if (response.statusCode == 200) {
+        final decodedData = jsonDecode(response.body);
+        final productsData = decodedData["response"];
+        if (productsData is List) {
+          _shoppingCart = productsData
+              .map(
+                  (item) => CartModel(id: item['id'], items: item, quantity: 0))
+              .toList();
+        } else {
+          debugPrint("No Data: productsData is not a List");
+        }
+      } else {
+        debugPrint("Response failed with code ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint('Failed to Load data: $e');
+    }
+  }
 
   Future<void> add(productId) async {
-
     final userId = await sharedPref.getUid();
 
     try {
-      final response = await http.post(Uri.parse('$baseUrl/users/addtocart?id=$productId&userid=$userId'));
+      final response = await http.post(
+          Uri.parse('$baseUrl/users/addtocart?id=$productId&userid=$userId'));
 
       if (response.statusCode == 200) {
         debugPrint(response.body.toString());
@@ -40,11 +68,11 @@ final sharedPref = SharedPref();
   }
 
   Future<void> remove(productId) async {
-
     final userId = await sharedPref.getUid();
 
     try {
-      final response = await http.post(Uri.parse('$baseUrl/users/removecart?id=$productId&userid=$userId'));
+      final response = await http.post(
+          Uri.parse('$baseUrl/users/removecart?id=$productId&userid=$userId'));
 
       if (response.statusCode == 200) {
         debugPrint(response.body.toString());
@@ -64,8 +92,7 @@ final sharedPref = SharedPref();
     }
   }
 
-  void addToCart(Items product) async{
-
+  void addToCart(Items product) async {
     final userId = await sharedPref.getUid();
     debugPrint(userId);
 
@@ -84,7 +111,7 @@ final sharedPref = SharedPref();
     notifyListeners();
   }
 
-  void removeFromCart(String productId) async{
+  void removeFromCart(String productId) async {
     _shoppingCart.removeWhere((elem) => elem.id == productId);
 
     final userId = await sharedPref.getUid();

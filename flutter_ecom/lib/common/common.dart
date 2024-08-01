@@ -5,4 +5,4 @@ void showSnakBar(String msg, BuildContext context) {
 }
 
 // const baseUrl = "https://flutter-ecom.onrender.com";
-const baseUrl = "http://192.168.1.8:3000";
+const baseUrl = "http://192.168.1.10:3000";

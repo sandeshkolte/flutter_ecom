@@ -1,14 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ecom/models/product_model.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
 import 'package:flutter_ecom/provider/product_provider.dart';
 import 'package:flutter_ecom/widgets/productwidgets/shop_list.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
-import '../common/common.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -18,11 +14,10 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
-
   @override
   Widget build(BuildContext context) {
-  final productProvider = Provider.of<ProductProvider>(context);
-  final cartProvider = Provider.of<CartProvider>(context);
+    final productProvider = Provider.of<ProductProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +29,7 @@ class _ShopPageState extends State<ShopPage> {
         ),
         centerTitle: true,
         actions: [
-            IconButton(
+          IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
               productProvider.fetchProduct();
@@ -67,12 +62,7 @@ class _ShopPageState extends State<ShopPage> {
           padding: Vx.m16,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (productProvider.items.isNotEmpty)
-                const ShopList().expand()
-              else
-                const CircularProgressIndicator().centered().expand(),
-            ],
+            children: [const ShopList().expand()],
           ),
         ),
       ),

@@ -22,31 +22,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     splashServices.isLogin(context);
-     CartModel.products = [];
-    getCart();
-  }
-
-  
-  Future<void> getCart() async {
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/products'));
-      debugPrint(response.body.toString());
-      if (response.statusCode == 200) {
-        final decodedData = jsonDecode(response.body);
-        final productsData = decodedData["response"];
-        if (productsData is List) {
-          CartModel.products =
-              productsData.map<Items>((item) => Items.fromMap(item)).toList();
-        } else {
-          debugPrint("No Data: productsData is not a List");
-        }
-        setState(() {});
-      } else {
-        debugPrint("Response failed with code ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint('Failed to Load data: $e');
-    }
   }
 
   @override
