@@ -6,8 +6,10 @@ import 'package:flutter_ecom/provider/order_provider.dart';
 import 'package:flutter_ecom/provider/product_provider.dart';
 import 'package:flutter_ecom/views/auth_screen/splash.dart';
 import 'package:flutter_ecom/views/cart_page.dart';
+import 'package:flutter_ecom/views/category_page.dart';
 import 'package:flutter_ecom/views/homepage.dart';
 import 'package:flutter_ecom/views/init_page.dart';
+import 'package:flutter_ecom/views/newhome.dart';
 import 'package:flutter_ecom/views/orders_page.dart';
 import 'package:flutter_ecom/views/profile_page.dart';
 // import 'package:flutter_ecom/views/login_page.dart';
@@ -45,13 +47,15 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
       theme: MyTheme.lightTheme(context),
       darkTheme: MyTheme.darkTheme(context),
-      initialRoute: '/splash',
+      initialRoute: '/home',
       routes: {
         '/': (context) => const InitPage(),
         '/splash': (context) => const SplashScreen(),
         '/register': (context) => const RegisterPage(),
         '/login': (context) => const Loginpage(),
         '/home': (context) => const HomePage(),
+        '/newhome': (context) => const NewHome(),
+        '/category': (context) => const CategoryPage(),
         '/orders': (context) => const OrdersPage(),
         '/profile': (context) => const ProfilePage(),
         '/shop': (context) => const ShopPage(),

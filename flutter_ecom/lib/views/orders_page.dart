@@ -20,8 +20,16 @@ class _OrdersPageState extends State<OrdersPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        title: "Orders".text.color(context.primaryColor).make(),
-        centerTitle: true,
+        title: "Orders".text.make(),
+        actions: [
+          IconButton(
+              onPressed: () {
+                final orderProvider = OrderProvider();
+
+                orderProvider.fetchOrderFuture;
+              },
+              icon: const Icon(Icons.refresh_rounded))
+        ],
       ),
       body: Column(
         children: [
@@ -36,15 +44,26 @@ class _OrderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final OrderModel _Order = (VxState.store as MyStore).Order;
-    return Consumer<OrderProvider>(
-      builder: (context, value, child) => value.orderList.isEmpty
-          ? "It's Empty Here!".text.xl3.makeCentered()
-          : ListView.builder(
-              itemCount: value.orderList.length,
-              itemBuilder: (context, index) {
-                return OrderItem(product: value.orderList[index]);
-              }),
-    );
+    return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
+      return FutureBuilder(
+          future: orderProvider.fetchOrderFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return orderProvider.orderList.isEmpty
+                  ? "It's Empty Here!".text.xl3.makeCentered()
+                  : ListView.builder(
+                      itemCount: orderProvider.orderList.length,
+                      itemBuilder: (context, index) {
+                        return OrderItem(
+                            product: orderProvider.orderList[index]);
+                      });
+            }
+          });
+    });
   }
 }
 
@@ -63,12 +82,7 @@ class OrderItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             product.items.name.text.lg.bold.color(context.primaryColor).make(),
-            "Status: ${product.items.orderStatus}"
-                .text
-                .lg
-                .bold
-                .emerald800
-                .make(),
+            "Status: ${product.orderStatus}".text.lg.bold.emerald800.make(),
           ],
         ).p(context.isMobile ? 2 : 16),
       ),

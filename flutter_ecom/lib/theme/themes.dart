@@ -41,6 +41,7 @@ class MyTheme {
 
 //Colors
   static Color creamColor = const Color(0xfff5f5f5);
+  static Color blackBlakish = const Color(0xff292526);
   static Color darkcreamColor = Vx.gray900;
   static Color darkBluishColor = const Color(0xff403b58);
   static Color lightBluishColor = Vx.purple700;

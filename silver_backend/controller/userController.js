@@ -86,7 +86,10 @@ res.status(200).json({
 })
 
     }catch(e){
-
+        res.status(500).json({
+            status: "Error",
+            response: `Error: ${e.message}`
+        });
 
     }
 }
@@ -122,6 +125,32 @@ const addtoCart = async (req, res) => {
             status: "Error",
             response: `Error: ${e.message}`
         });
+    }
+}
+
+
+const getOrders = async (req,res) => {
+    try{
+const {userid} = req.query
+
+let user = await userModel.findById(userid)
+
+if (!user) return res.status(404).json({
+    status: "Error",
+    response: "User not found"
+})
+
+res.status(200).json({
+    status:"success",
+    response:user.orders
+})
+
+    }catch(e){
+        res.status(500).json({
+            status: "Error",
+            response: `Error: ${e.message}`
+        });
+
     }
 }
 
@@ -307,4 +336,4 @@ const removeOrders = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, addtoCart, removeFromCart,addOrder,removeOrders,updateOrderStatus,getCart };
+module.exports = { registerUser, loginUser, logoutUser, addtoCart, removeFromCart,addOrder,removeOrders,updateOrderStatus,getCart,getOrders };

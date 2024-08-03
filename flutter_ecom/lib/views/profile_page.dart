@@ -40,8 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        title: "Profile".text.color(context.primaryColor).make(),
-        centerTitle: true,
+        title: "Profile".text.make(),
       ),
       body: Column(
         children: [

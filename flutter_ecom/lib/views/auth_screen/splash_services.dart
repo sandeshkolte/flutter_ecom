@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecom/common/shared_pref.dart';
 
 class SplashServices {
-    final sharedPref = SharedPref();
-  isLogin(BuildContext context) async{
+  final sharedPref = SharedPref();
+  isLogin(BuildContext context) async {
     final userId = await sharedPref.getUid();
     debugPrint(userId);
-    if (userId != null || userId!="") {
+    if (userId == null || userId == "") {
       Timer(const Duration(seconds: 3), () {
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushNamed(context, '/');
       });
     } else {
       Timer(const Duration(seconds: 3), () {
-        Navigator.pushNamed(context, '/');
+        Navigator.pushNamed(context, '/home');
       });
     }
   }

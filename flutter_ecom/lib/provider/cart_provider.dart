@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/common/shared_pref.dart';
 import 'package:flutter_ecom/models/cart_model.dart';
 import 'package:flutter_ecom/models/product_model.dart';
-import 'package:http/http.dart' as http;
-import '../common/common.dart';
+import '../repository/cart_services.dart';
 
 class CartProvider extends ChangeNotifier {
   late Items product;
@@ -16,98 +13,35 @@ class CartProvider extends ChangeNotifier {
 
   final sharedPref = SharedPref();
 
-  Future<void> fetchCart() async {
-    try {
-      final userId = await sharedPref.getUid();
+  final CartService _cartService = CartService();
 
-      final response =
-          await http.post(Uri.parse('$baseUrl/users/getcart?userid=$userId'));
-      debugPrint(response.body.toString());
-      if (response.statusCode == 200) {
-        final decodedData = jsonDecode(response.body);
-        final productsData = decodedData["response"];
-        if (productsData is List) {
-          _shoppingCart = productsData
-              .map(
-                  (item) => CartModel(id: item['id'], items: item, quantity: 0))
-              .toList();
-        } else {
-          debugPrint("No Data: productsData is not a List");
-        }
-      } else {
-        debugPrint("Response failed with code ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint('Failed to Load data: $e');
-    }
+  bool isCartFetched = false;
+  Future<void>? _fetchCartFuture;
+
+  Future<void> get fetchCartFuture {
+    return _fetchCartFuture ??= fetchCart();
   }
 
-  Future<void> add(productId) async {
-    final userId = await sharedPref.getUid();
-
-    try {
-      final response = await http.post(
-          Uri.parse('$baseUrl/users/addtocart?id=$productId&userid=$userId'));
-
-      if (response.statusCode == 200) {
-        debugPrint(response.body.toString());
-        // final decodedData = jsonDecode(response.body);
-        // final productsData = decodedData["response"];
-        // if (productsData is List) {
-        //   ProductModel.items =
-        //       productsData.map<Items>((item) => Items.fromMap(item)).toList();
-        // } else {
-        //   debugPrint("No Data: productsData is not a List");
-        // }
-      } else {
-        debugPrint("Response failed with code ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint('Failed to Load data: $e');
-    }
-  }
-
-  Future<void> remove(productId) async {
-    final userId = await sharedPref.getUid();
-
-    try {
-      final response = await http.post(
-          Uri.parse('$baseUrl/users/removecart?id=$productId&userid=$userId'));
-
-      if (response.statusCode == 200) {
-        debugPrint(response.body.toString());
-        // final decodedData = jsonDecode(response.body);
-        // final productsData = decodedData["response"];
-        // if (productsData is List) {
-        //   ProductModel.items =
-        //       productsData.map<Items>((item) => Items.fromMap(item)).toList();
-        // } else {
-        //   debugPrint("No Data: productsData is not a List");
-        // }
-      } else {
-        debugPrint("Response failed with code ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint('Failed to Load data: $e');
-    }
-  }
+Future<void> fetchCart() async{
+    _shoppingCart = await _cartService.fetchCart();
+    notifyListeners();
+}
 
   void addToCart(Items product) async {
     final userId = await sharedPref.getUid();
-    debugPrint(userId);
 
     var isExist = _shoppingCart.where((elem) => elem.id == product.id);
 
     if (isExist.isEmpty) {
-      _shoppingCart.add(CartModel(id: product.id, items: product, quantity: 1));
+      _shoppingCart.add(CartModel(id: product.id, items: product, quantity: 1,orderStatus: "No order"));
 
       if (userId != null) {
-        add(product.id);
+      await _cartService.add(product.id);
       }
+
     } else {
       isExist.first.quantity += 1;
     }
-
     notifyListeners();
   }
 
@@ -115,10 +49,9 @@ class CartProvider extends ChangeNotifier {
     _shoppingCart.removeWhere((elem) => elem.id == productId);
 
     final userId = await sharedPref.getUid();
-    debugPrint(userId);
 
     if (userId != null) {
-      remove(productId);
+    await _cartService.remove(productId);
     }
 
     notifyListeners();

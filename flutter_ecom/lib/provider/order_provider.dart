@@ -1,94 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ecom/common/common.dart';
 import 'package:flutter_ecom/common/shared_pref.dart';
 import 'package:flutter_ecom/models/cart_model.dart';
 // import 'package:flutter_ecom/models/order_model.dart';
 import 'package:flutter_ecom/models/product_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_ecom/repository/order_service.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class OrderProvider extends ChangeNotifier {
   late Items product;
 
-  final List<CartModel> _orderList = [];
+  List<CartModel> _orderList = [];
 
   List<CartModel> get orderList => _orderList;
 
   final sharedPref = SharedPref();
 
-  Future<void> add(productId) async {
-    final userId = await sharedPref.getUid();
+  final _orderService = OrderService();
 
-    try {
-      final response = await http.post(
-          Uri.parse('$baseUrl/users/addorder?id=$productId&userid=$userId'));
+  Future<void>? _fetchOrderFuture;
 
-      if (response.statusCode == 200) {
-        debugPrint(response.body.toString());
-        updateOrderStatus(productId);
-      } else {
-        debugPrint("Response failed with code ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint('Failed to Load data: $e');
-    }
+  Future<void> get fetchOrderFuture {
+    return _fetchOrderFuture ??= fetchOrder();
   }
 
-  Future<void> updateOrderStatus(productId) async {
-    final userId = await sharedPref.getUid();
-
-    try {
-      final response = await http.post(
-          Uri.parse('$baseUrl/users/updateorder?orderId=$productId&userId=$userId'));
-
-      if (response.statusCode == 200) {
-        debugPrint(response.body.toString());
-      } else {
-        debugPrint("Response failed with code ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint('Failed to Load data: $e');
-    }
+  Future<void> fetchOrder() async {
+    _orderList = await _orderService.fetchOrder();
+    notifyListeners();
   }
 
-  Future<void> remove(productId) async {
+  void addOrder(CartModel products, context) async {
     final userId = await sharedPref.getUid();
+    debugPrint("User ID: $userId");
 
-    try {
-      final response = await http.post(
-          Uri.parse('$baseUrl/users/removeorder?id=$productId&userid=$userId'));
-
-      if (response.statusCode == 200) {
-        debugPrint(response.body.toString());
-        // final decodedData = jsonDecode(response.body);
-        // final productsData = decodedData["response"];
-        // if (productsData is List) {
-        //   ProductModel.items =
-        //       productsData.map<Items>((item) => Items.fromMap(item)).toList();
-        // } else {
-        //   debugPrint("No Data: productsData is not a List");
-        // }
-      } else {
-        debugPrint("Response failed with code ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint('Failed to Load data: $e');
-    }
-  }
-
-  void addOrder(Items product) async {
-    final userId = await sharedPref.getUid();
-    debugPrint(userId);
-
-    var isExist = _orderList.where((elem) => elem.id == product.id);
+    var isExist = _orderList.where((elem) => elem.id == products.id);
 
     if (isExist.isEmpty) {
-      _orderList.add(CartModel(id: product.id, items: product, quantity: 1));
+      _orderList
+          .add(CartModel(id: products.id, items: products.items, quantity: 1,orderStatus: "Processing"));
+      debugPrint("Product added to order list: ${products.id}");
 
       if (userId != null) {
-      await  add(product.id);
+        await _orderService.add(products.id);
+        debugPrint("Product added to remote service: ${products.id}");
       }
     } else {
-      isExist.first.quantity += 1;
+      debugPrint("Item already ordered: ${products.id}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: "Item already ordered".text.black.make(),
+          shape: ContinuousRectangleBorder(
+              borderRadius: BorderRadius.circular(12)),
+          backgroundColor: Vx.indigo300,
+        ),
+      );
     }
 
     notifyListeners();
@@ -101,7 +65,7 @@ class OrderProvider extends ChangeNotifier {
     debugPrint(userId);
 
     if (userId != null) {
-      remove(productId);
+      await _orderService.remove(productId);
     }
 
     notifyListeners();
