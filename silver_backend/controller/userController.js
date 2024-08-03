@@ -1,9 +1,37 @@
 const bcrypt = require('bcrypt')
 const userModel = require('../models/user')
 const productModel = require('../models/product')
-const {generateToken} = require('../utils/generateToken')
+const { generateToken } = require('../utils/generateToken')
 
-const registerUser =  async (req, res) => {
+
+const getUserDetails = async (req, res) => {
+
+    try {
+
+        const { userid } = req.query
+
+        let user = await userModel.findById(userid)
+
+        if (!user) return res.status(403).json({
+            status: "Error",
+            response: "no User"
+        })
+        else {
+            return res.status(200).json({
+                status: "success",
+                response: user
+            })
+        }
+    } catch (err) {
+        res.status(500).json({
+            status: "Error",
+            response: `Error: ${err.message}`
+        });
+    }
+}
+
+
+const registerUser = async (req, res) => {
 
     const { username, email, password } = req.body
 
@@ -31,7 +59,7 @@ const registerUser =  async (req, res) => {
 
                     res.status(200).json({
                         status: "Success",
-                        response: {createdUser,token}
+                        response: { createdUser, token }
                     })
 
                 }
@@ -56,7 +84,7 @@ const loginUser = async (req, res) => {
             res.cookie("token", token)
             res.status(200).json({
                 status: "Success",
-                response: {user,token}
+                response: { user, token }
             })
         } else {
             res.status(403).json({
@@ -69,23 +97,23 @@ const loginUser = async (req, res) => {
 }
 
 
-const getCart = async (req,res) => {
-    try{
-const {userid} = req.query
+const getCart = async (req, res) => {
+    try {
+        const { userid } = req.query
 
-let user = await userModel.findById(userid)
+        let user = await userModel.findById(userid)
 
-if (!user) return res.status(404).json({
-    status: "Error",
-    response: "User not found"
-})
+        if (!user) return res.status(404).json({
+            status: "Error",
+            response: "User not found"
+        })
 
-res.status(200).json({
-    status:"success",
-    response:user.cart
-})
+        res.status(200).json({
+            status: "success",
+            response: user.cart
+        })
 
-    }catch(e){
+    } catch (e) {
         res.status(500).json({
             status: "Error",
             response: `Error: ${e.message}`
@@ -98,7 +126,7 @@ const addtoCart = async (req, res) => {
     try {
         const { id, userid } = req.query;
 
-        let product = await productModel.findOne({ _id:id });
+        let product = await productModel.findOne({ _id: id });
 
         if (!product) return res.status(404).json({
             status: "Error",
@@ -129,23 +157,23 @@ const addtoCart = async (req, res) => {
 }
 
 
-const getOrders = async (req,res) => {
-    try{
-const {userid} = req.query
+const getOrders = async (req, res) => {
+    try {
+        const { userid } = req.query
 
-let user = await userModel.findById(userid)
+        let user = await userModel.findById(userid)
 
-if (!user) return res.status(404).json({
-    status: "Error",
-    response: "User not found"
-})
+        if (!user) return res.status(404).json({
+            status: "Error",
+            response: "User not found"
+        })
 
-res.status(200).json({
-    status:"success",
-    response:user.orders
-})
+        res.status(200).json({
+            status: "success",
+            response: user.orders
+        })
 
-    }catch(e){
+    } catch (e) {
         res.status(500).json({
             status: "Error",
             response: `Error: ${e.message}`
@@ -159,7 +187,7 @@ const addOrder = async (req, res) => {
     try {
         const { id, userid } = req.query;
 
-        let product = await productModel.findOne({ _id:id });
+        let product = await productModel.findOne({ _id: id });
 
         if (!product) return res.status(404).json({
             status: "Error",
@@ -226,7 +254,7 @@ const updateOrderStatus = async (req, res) => {
     }
 };
 
-const logoutUser =  (req, res) => {
+const logoutUser = (req, res) => {
     res.cookie("token", "")
     res.status(200).json({
         status: "Success",
@@ -269,7 +297,7 @@ const removeFromCart = async (req, res) => {
 
         // Log the updated cart for debugging
         console.log(`User's updated cart: ${JSON.stringify(user.cart)}`);
-        
+
         await user.save();
 
         res.status(200).json({
@@ -320,7 +348,7 @@ const removeOrders = async (req, res) => {
 
         // Log the updated cart for debugging
         console.log(`User's updated cart: ${JSON.stringify(user.orders)}`);
-        
+
         await user.save();
 
         res.status(200).json({
@@ -336,4 +364,4 @@ const removeOrders = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, addtoCart, removeFromCart,addOrder,removeOrders,updateOrderStatus,getCart,getOrders };
+module.exports = { registerUser, loginUser, logoutUser, addtoCart, removeFromCart, addOrder, removeOrders, updateOrderStatus, getCart, getOrders,getUserDetails };

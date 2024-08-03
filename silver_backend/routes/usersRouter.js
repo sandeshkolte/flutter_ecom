@@ -1,5 +1,5 @@
 const express = require('express')
-const {registerUser,loginUser,logoutUser, addtoCart, removeFromCart, addOrder, removeOrders, updateOrderStatus, getCart, getOrders} = require('../controller/userController')
+const {registerUser,loginUser,logoutUser, addtoCart, removeFromCart, addOrder, removeOrders, updateOrderStatus, getCart, getOrders, getUserDetails} = require('../controller/userController')
 
 const router = express.Router()
 
@@ -13,5 +13,6 @@ router.post('/removeorder', removeOrders)
 router.post('/updateorder', updateOrderStatus)
 router.post('/getcart', getCart)
 router.post('/getorders', getOrders)
+router.post('/getuser', getUserDetails)
 
 module.exports = router
