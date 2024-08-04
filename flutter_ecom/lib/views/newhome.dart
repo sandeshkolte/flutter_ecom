@@ -45,6 +45,19 @@ class _NewHomeState extends State<NewHome> {
                 ),
                 backgroundColor: WidgetStatePropertyAll(context.canvasColor)),
           ),
+          Container(
+            height: 180,
+            width: context.screenWidth,
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                image: const DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage("assets/images/app-banner.png"))),
+          ).innerShadow(
+              offset: const Offset(0, -10),
+              color: Colors.black.withOpacity(.5),
+              blur: 12),
           const Expanded(child: MyCustomTab())
         ],
       ),
