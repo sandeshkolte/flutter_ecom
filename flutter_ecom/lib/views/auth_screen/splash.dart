@@ -26,11 +26,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
+      backgroundColor: Color(0xfff6f3eb),
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: ["Silver Road".text.fuchsia900.bold.xl2.makeCentered()],
+        children: [Image(image: AssetImage("assets/images/ecom-logo.png"))],
       )),
     );
   }

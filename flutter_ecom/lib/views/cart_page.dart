@@ -253,7 +253,7 @@ class _CartTotal extends StatelessWidget {
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
 
     return SizedBox(
-      height: 100,
+      height: 50,
       child: Consumer<CartProvider>(builder: (context, value, child) {
         final buyPrice = value.cartTotal - value.shippingCharge;
 

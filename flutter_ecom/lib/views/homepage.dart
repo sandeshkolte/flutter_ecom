@@ -76,7 +76,6 @@ class _HomePageState extends State<HomePage> {
                             icon: const Icon(CupertinoIcons.cart).badge(
                               position: VxBadgePosition.right,
                               count: cartProvider.shoppingCart.length,
-                              size: 20,
                               textStyle: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
