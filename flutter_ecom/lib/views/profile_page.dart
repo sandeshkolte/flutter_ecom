@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/common/shared_pref.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
+import 'package:flutter_ecom/provider/order_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:http/http.dart' as http;
 import '../common/common.dart';
@@ -107,19 +109,28 @@ class _ProfilePageState extends State<ProfilePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              gradient: const LinearGradient(
-                                  colors: [Vx.slate100, Vx.slate200])),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 30.0),
-                            child: Column(
-                              children: [
-                                "Orders".text.lg.make(),
-                                "${userData['orders'].length}".text.make()
-                              ],
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/orders');
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                gradient: const LinearGradient(
+                                    colors: [Vx.slate100, Vx.slate200])),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 30.0),
+                              child: Consumer<OrderProvider>(
+                                builder: (BuildContext context,
+                                        OrderProvider value, Widget? child) =>
+                                    Column(
+                                  children: [
+                                    "Orders".text.lg.make(),
+                                    value.orderList.length.text.make()
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),

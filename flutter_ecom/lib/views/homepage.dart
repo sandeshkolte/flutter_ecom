@@ -42,7 +42,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Expanded(child: _pages[value]),
                 Container(
-                  margin: const EdgeInsets.all(16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
                     child: Theme(
@@ -66,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                               size: 30,
                             ),
                             icon: Icon(Icons.category),
-                            label: 'Orders',
+                            label: 'Categories',
                           ),
                           BottomNavigationBarItem(
                             activeIcon: const Icon(

@@ -50,7 +50,7 @@ class PriceDetails extends StatelessWidget {
       final mrpPrice = value.cartSubtotal + value.cartDiscount;
 
       return Container(
-        margin: const EdgeInsets.all(20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         width: (context).screenWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,8 +210,8 @@ class CartItem extends StatelessWidget {
                       // const SizedBox(height: 8),
                       Row(
                         children: [
-                          "FREE Delivery".text.make(),
-                          formatter.text.bold.make().pOnly(left: 4)
+                          "FREE Delivery ".text.make(),
+                          formatter.text.bold.make()
                         ],
                       ).py(4),
                     ],
@@ -240,8 +240,8 @@ class _CartTotal extends StatelessWidget {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: "Payment Successful".text.make()));
 
-      // orderProvider.orderList.addAll(cartProvider.shoppingCart);
-      // orderProvider.addOrder(cartProvider.);
+      orderProvider.orderList.addAll(cartProvider.shoppingCart);
+      orderProvider.addOrder(cartProvider.shoppingCart.first, context);
     }
 
     void handlePaymentError(PaymentFailureResponse response) {
@@ -267,7 +267,7 @@ class _CartTotal extends StatelessWidget {
                 "$buyPrice".text.xl4.color(context.primaryColor).make()
               ],
             ),
-            Consumer<OrderProvider>(
+            Consumer<CartProvider>(
               builder: (context, value, child) => ElevatedButton(
                   onPressed: () {
                     if (buyPrice == 0) {
@@ -280,25 +280,25 @@ class _CartTotal extends StatelessWidget {
                       return;
                     }
 
-                    // final amount = value.cartTotal * 100;
+                    final amount = value.cartTotal * 100;
 
-                    // var options = {
-                    //   'key': 'rzp_test_9B43leN3Ot65ew',
-                    //   'amount': amount,
-                    //   'name': 'Silver Road',
-                    //   'description': 'A one stop shopping platform',
-                    //   'prefill': {
-                    //     'contact': '8888888888',
-                    //     'email': 'test@razorpay.com'
-                    //   }
-                    // };
-                    // razorpay.open(options);
+                    var options = {
+                      'key': 'rzp_test_9B43leN3Ot65ew',
+                      'amount': amount,
+                      'name': 'Silver Road',
+                      'description': 'A one stop shopping platform',
+                      'prefill': {
+                        'contact': '8888888888',
+                        'email': 'test@razorpay.com'
+                      }
+                    };
+                    razorpay.open(options);
 
                     // orderProvider.orderList.add(cartProvider.shoppingCart.first);
 
                     // debugPrint("The cart Has ${cartProvider.shoppingCart.first}");
 
-                    value.addOrder(cartProvider.shoppingCart.first, context);
+                    // orderProvider.addOrder(cartProvider.shoppingCart.first, context);
                   },
                   style: ButtonStyle(
                       shape: WidgetStateProperty.all(ContinuousRectangleBorder(

@@ -1,11 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ecom/models/cart_model.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:http/http.dart' as http;
-import '../../common/common.dart';
-import '../../models/product_model.dart';
 import 'splash_services.dart';
 
 class SplashScreen extends StatefulWidget {
