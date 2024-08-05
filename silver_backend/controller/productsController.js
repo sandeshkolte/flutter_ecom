@@ -28,26 +28,16 @@ const getProduct = async (req, res) => {
     res.status(400).json({ status: "Error", response: err.message });
   }
 };
-
 const findProduct = async (req, res) => {
   try {
-    const id = req.params.id || req.query.id;
-    console.log(`Finding product with ID: ${id}`);
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ status: "Error", response: "Invalid product ID" });
-    }
-
-    const product = await productModel.findById(id);
-    if (!product) {
-      return res.status(404).json({ status: "Error", response: "Product not found" });
-    }
-
-    res.status(200).json({ status: "success", response: product });
+    const { category } = req.query;
+  const product = await productModel.find({ category: { $regex: category, $options: "i" } });
+      res.status(200).json({ status: "success", response: product });
   } catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
 };
+
 
 const createProduct = async (req, res) => {
   try {

@@ -6,7 +6,7 @@ const upload = require('../config/multer-config')
 
 router.get('/',getProduct)
 router.post('/create',upload.single('image'), createProduct)
-router.get('/find/:id', findProduct); 
+router.post('/findproduct', findProduct);
 router.get('/find', findProduct); 
 router.get('/edit/:id',/*isOwnerLoggedIn,*/editProduct)
 router.post('/update/:id',upload.single('image')/*,isOwnerLoggedIn*/, updateProduct)

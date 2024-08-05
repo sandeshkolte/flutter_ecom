@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
+import 'package:flutter_ecom/provider/category_provider.dart';
 import 'package:flutter_ecom/provider/imageurl_provider.dart';
 import 'package:flutter_ecom/provider/order_provider.dart';
 import 'package:flutter_ecom/provider/product_provider.dart';
@@ -32,6 +33,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => ImageUrlProvider()),
       ChangeNotifierProvider(create: (_) => CartProvider()),
       ChangeNotifierProvider(create: (_) => OrderProvider()),
+      ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ChangeNotifierProvider(create: (_) => UserProvider()),
       ChangeNotifierProvider(create: (_) => ProductProvider())
     ],

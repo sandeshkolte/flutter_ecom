@@ -32,7 +32,11 @@ class _NewHomeState extends State<NewHome> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: "MINIMILIST".text.make(),
+        title: const SizedBox(
+          width: 200,
+          child: Image(
+              fit: BoxFit.cover, image: AssetImage("assets/images/logo.png")),
+        ),
         actions: [
           IconButton(
               style: ButtonStyle(

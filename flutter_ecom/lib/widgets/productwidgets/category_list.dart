@@ -1,52 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/models/product_model.dart';
+import 'package:flutter_ecom/provider/category_provider.dart';
+import 'package:flutter_ecom/widgets/productwidgets/add_to_cart.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
-import '../../provider/product_provider.dart';
 import '../../views/product_detail_page.dart';
-import 'add_to_cart.dart';
 import 'product_image.dart';
 
-class ShopList extends StatelessWidget {
-  const ShopList({super.key});
+class CategoryList extends StatelessWidget {
+  const CategoryList({super.key, required this.category});
+  final String category;
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<ProductProvider>(context);
+    final categoryProvider = Provider.of<CategoryProvider>(context);
 
     return FutureBuilder(
-        future: productProvider.fetchProduct(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: productProvider.items.length,
-              itemBuilder: (context, index) {
-                final product = productProvider.items[index];
-                return InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailPage(product: product),
-                    ),
-                  ),
-                  child: ShopItem(product: product),
+      future: categoryProvider.findbyCategory(category),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return categoryProvider.items.isEmpty
+              ? "It's Empty Here!".text.xl3.makeCentered()
+              : ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: categoryProvider.items.length,
+                  itemBuilder: (context, index) {
+                    final product = categoryProvider.items[index];
+                    return InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProductDetailPage(product: product),
+                        ),
+                      ),
+                      child: CategoryItem(product: product),
+                    );
+                  },
                 );
-              },
-            );
-          }
-        });
+        }
+      },
+    );
   }
 }
 
-class ShopItem extends StatelessWidget {
+class CategoryItem extends StatelessWidget {
   final Items product;
 
-  const ShopItem({super.key, required this.product});
+  const CategoryItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +71,8 @@ class ShopItem extends StatelessWidget {
                 .overflow(TextOverflow.ellipsis)
                 .textStyle(context.captionStyle)
                 .make(),
-            10.heightBox,ButtonBar(
+            10.heightBox,
+            ButtonBar(
               alignment: MainAxisAlignment.spaceBetween,
               buttonPadding: EdgeInsets.zero,
               children: [

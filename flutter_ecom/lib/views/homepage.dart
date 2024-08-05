@@ -4,7 +4,6 @@ import 'package:flutter_ecom/theme/themes.dart';
 import 'package:flutter_ecom/views/cart_page.dart';
 import 'package:flutter_ecom/views/category_page.dart';
 import 'package:flutter_ecom/views/newhome.dart';
-import 'package:flutter_ecom/views/orders_page.dart';
 import 'package:flutter_ecom/views/profile_page.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
