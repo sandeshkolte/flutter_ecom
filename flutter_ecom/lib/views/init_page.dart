@@ -54,9 +54,9 @@ class InitPageState extends State<InitPage> with TickerProviderStateMixin {
                   height: 100,
                 ),
                 InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/shop');
-                  },
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/home');
+                  // },
                   child: FadeInUp(
                       duration: const Duration(milliseconds: 1500),
                       child: Container(
@@ -74,10 +74,10 @@ class InitPageState extends State<InitPage> with TickerProviderStateMixin {
                 const SizedBox(
                   height: 20,
                 ),
-                InkWell(onTap: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-
+                InkWell(
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
                   child: FadeInUp(
                       duration: const Duration(milliseconds: 1700),
                       child: Container(
@@ -89,7 +89,8 @@ class InitPageState extends State<InitPage> with TickerProviderStateMixin {
                           child: Text(
                             "Create Account",
                             style: TextStyle(
-                                color: Colors.white, fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       )),

@@ -9,11 +9,11 @@ class SplashServices {
     debugPrint(userId);
     if (userId == null || userId == "") {
       Timer(const Duration(seconds: 3), () {
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       });
     } else {
       Timer(const Duration(seconds: 3), () {
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/home');
       });
     }
   }

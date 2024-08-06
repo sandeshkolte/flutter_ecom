@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                         backgroundColor: MyTheme.blackBlakish,
                         currentIndex: value,
                         selectedItemColor: Colors.orange,
-                        unselectedItemColor: Vx.slate100,
+                        unselectedItemColor: const Color(0xfff6f3eb),
                         showUnselectedLabels: false,
                         onTap: _onItemTapped,
                       ),

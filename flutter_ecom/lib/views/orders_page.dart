@@ -18,7 +18,7 @@ class _OrdersPageState extends State<OrdersPage> {
     return Scaffold(
       backgroundColor: context.canvasColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         backgroundColor: Colors.transparent,
         title: "Orders".text.make(),
         actions: [

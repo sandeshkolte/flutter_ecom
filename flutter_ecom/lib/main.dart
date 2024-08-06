@@ -6,6 +6,7 @@ import 'package:flutter_ecom/provider/imageurl_provider.dart';
 import 'package:flutter_ecom/provider/order_provider.dart';
 import 'package:flutter_ecom/provider/product_provider.dart';
 import 'package:flutter_ecom/provider/user_provider.dart';
+import 'package:flutter_ecom/provider/wishlist_provider.dart';
 import 'package:flutter_ecom/views/auth_screen/splash.dart';
 import 'package:flutter_ecom/views/cart_page.dart';
 import 'package:flutter_ecom/views/category_page.dart';
@@ -34,6 +35,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => CartProvider()),
       ChangeNotifierProvider(create: (_) => OrderProvider()),
       ChangeNotifierProvider(create: (_) => CategoryProvider()),
+      ChangeNotifierProvider(create: (_) => WishListProvider()),
       ChangeNotifierProvider(create: (_) => UserProvider()),
       ChangeNotifierProvider(create: (_) => ProductProvider())
     ],

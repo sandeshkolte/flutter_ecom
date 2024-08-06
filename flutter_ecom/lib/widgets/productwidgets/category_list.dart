@@ -102,6 +102,6 @@ class CategoryItem extends StatelessWidget {
         .rounded
         .square(180)
         .make()
-        .py4();
+        .py2();
   }
 }

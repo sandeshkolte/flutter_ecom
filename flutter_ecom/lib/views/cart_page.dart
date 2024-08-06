@@ -59,28 +59,28 @@ class PriceDetails extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: ["MRP:".text.make(), "$mrpPrice".text.make()],
-            ).py4(),
+            ).py1(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 "Discount:".text.make(),
                 "-${value.cartDiscount}".text.make()
               ],
-            ).py4(),
+            ).py1(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 "Shipping Charge:".text.make(),
                 "${value.shippingCharge}".text.make(),
               ],
-            ).py4(),
+            ).py1(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 "Total:".text.lg.bold.make(),
                 "${value.cartTotal}".text.lg.bold.make(),
               ],
-            ).py8(),
+            ).py2(),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -213,7 +213,7 @@ class CartItem extends StatelessWidget {
                           "FREE Delivery ".text.make(),
                           formatter.text.bold.make()
                         ],
-                      ).py(4),
+                      ).py(2),
                     ],
                   ),
                 ),
@@ -240,8 +240,13 @@ class _CartTotal extends StatelessWidget {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: "Payment Successful".text.make()));
 
-      orderProvider.orderList.addAll(cartProvider.shoppingCart);
-      orderProvider.addOrder(cartProvider.shoppingCart.first, context);
+      // Add all items from cart to orders
+      for (var item in cartProvider.shoppingCart) {
+        orderProvider.addOrder(item, context);
+      }
+
+      // Clear the cart after adding items to orders
+      cartProvider.clearCart();
     }
 
     void handlePaymentError(PaymentFailureResponse response) {
@@ -293,12 +298,6 @@ class _CartTotal extends StatelessWidget {
                       }
                     };
                     razorpay.open(options);
-
-                    // orderProvider.orderList.add(cartProvider.shoppingCart.first);
-
-                    // debugPrint("The cart Has ${cartProvider.shoppingCart.first}");
-
-                    // orderProvider.addOrder(cartProvider.shoppingCart.first, context);
                   },
                   style: ButtonStyle(
                       shape: WidgetStateProperty.all(ContinuousRectangleBorder(

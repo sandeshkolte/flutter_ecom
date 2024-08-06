@@ -5,6 +5,7 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const multer = require('multer');
+// const redis = require('../app');
 // const admin = require("firebase-admin");
 // const serviceAccount = require("../serviceAccountKey.json");
 require('dotenv').config();
@@ -19,6 +20,36 @@ require('dotenv').config();
 // Set up multer for handling file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+const Redis = require('ioredis');
+
+const redis = new Redis({
+  host: 'redis-11327.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com',
+  port: 11327,
+  password: 'QipNu6LKJUmR6EEmBvGgqeKZVV2M6urw',
+})
+
+
+
+const fetchProducts = async (req,res)=>{
+
+  let products = await redis.get("products")
+
+  if(products){
+    console.log("Get from cache")
+    return res.json({
+      products:JSON.parse(products)
+    })
+  }
+
+ products = await productModel.find()
+await redis.setex("products",30,JSON.stringify(products))
+
+res.json({
+  products
+})
+
+}
 
 const getProduct = async (req, res) => {
   try {
@@ -134,4 +165,4 @@ const updateProduct = async (req, res) => {
 // Middleware to handle file uploads in createProduct
 // app.post('/create-product', upload.single('file'), createProduct);
 
-module.exports = { createProduct, updateProduct, getProduct, findProduct, editProduct }
+module.exports = {fetchProducts, createProduct, updateProduct, getProduct, findProduct, editProduct }

@@ -44,7 +44,7 @@ class _CategoryPageState extends State<CategoryPage> {
             ),
             10.heightBox,
             Wrap(
-              spacing: 8,
+              spacing: 4,
               children: [
                 ElevatedButton(
                   onPressed: () => category.value = "SmartPhone",
@@ -87,7 +87,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   child: "Consoles".text.black.make(),
                 ),
               ],
-            ).px8(),
+            ).px2(),
             Expanded(child: CategoryList(category: value)),
           ],
         ),

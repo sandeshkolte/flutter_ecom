@@ -156,7 +156,9 @@ class MyTabOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const DisplayList();
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: const DisplayList());
   }
 }
 

@@ -7,8 +7,7 @@ const appLogger = require('./middlewares/appLogger');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const db = require('./config/mongoose-config');
-
-
+// const Redis = require('ioredis');
 // const upload = require('./config/multer-config')
 const app = express();
 const PORT = process.env.PORT || 9000;
@@ -47,6 +46,11 @@ app.use('/owner', ownersRouter);
 //   res.send('done');
 //   })
 
+// const redis = new Redis({
+//   host: 'redis-11327.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com',
+//   port: 11327,
+//   password: 'QipNu6LKJUmR6EEmBvGgqeKZVV2M6urw',
+// })
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server started on port ${PORT}`);

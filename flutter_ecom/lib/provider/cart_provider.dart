@@ -22,10 +22,15 @@ class CartProvider extends ChangeNotifier {
     return _fetchCartFuture ??= fetchCart();
   }
 
-Future<void> fetchCart() async{
+  Future<void> fetchCart() async {
     _shoppingCart = await _cartService.fetchCart();
     notifyListeners();
-}
+  }
+
+  void clearCart() {
+    _shoppingCart.clear();
+    notifyListeners();
+  }
 
   void addToCart(Items product) async {
     final userId = await sharedPref.getUid();
@@ -33,12 +38,15 @@ Future<void> fetchCart() async{
     var isExist = _shoppingCart.where((elem) => elem.id == product.id);
 
     if (isExist.isEmpty) {
-      _shoppingCart.add(CartModel(id: product.id, items: product, quantity: 1,orderStatus: "No order"));
+      _shoppingCart.add(CartModel(
+          id: product.id,
+          items: product,
+          quantity: 1,
+          orderStatus: "No order"));
 
       if (userId != null) {
-      await _cartService.add(product.id);
+        await _cartService.add(product.id);
       }
-
     } else {
       isExist.first.quantity += 1;
     }
@@ -51,7 +59,7 @@ Future<void> fetchCart() async{
     final userId = await sharedPref.getUid();
 
     if (userId != null) {
-    await _cartService.remove(productId);
+      await _cartService.remove(productId);
     }
 
     notifyListeners();
