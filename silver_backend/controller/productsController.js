@@ -24,12 +24,10 @@ const upload = multer({ storage });
 const Redis = require('ioredis');
 
 const redis = new Redis({
-  host: 'redis-11327.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com',
+  host: process.env.REDISHOST,
   port: 11327,
-  password: 'QipNu6LKJUmR6EEmBvGgqeKZVV2M6urw',
+  password: process.env.REDISPASS,
 })
-
-
 
 const fetchProducts = async (req,res)=>{
 
