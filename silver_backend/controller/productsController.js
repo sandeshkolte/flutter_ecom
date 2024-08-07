@@ -43,9 +43,7 @@ const fetchProducts = async (req,res)=>{
  products = await productModel.find()
 await redis.setex("products",30,JSON.stringify(products))
 
-res.json({
-  products
-})
+res.status(200).json({ status: "success", response: products })
 
 }
 

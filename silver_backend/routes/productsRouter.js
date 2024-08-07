@@ -4,8 +4,8 @@ const { isOwnerLoggedIn } = require('../middlewares/isLoggedIn')
 const router = express.Router()
 const upload = require('../config/multer-config')
 
-// router.get('/',getProduct)
-router.get('/',fetchProducts)
+router.get('/',getProduct)
+// router.get('/',fetchProducts)
 router.post('/create',upload.single('image'), createProduct)
 router.post('/findproduct', findProduct);
 router.get('/find', findProduct); 
