@@ -3,14 +3,8 @@ const productModel = require('../models/product')
 
 // Routes
 const home =  async(req,res)=>{
-    let products = await productModel.find();
-  
-    res.status(200).json({
-      response:products
-    })
-      res.render("panel",{
-          products
-      })
+    // let products = await productModel.find();
+res.send("Project working")
   }
 
   const createProdpage = (req,res)=>{
