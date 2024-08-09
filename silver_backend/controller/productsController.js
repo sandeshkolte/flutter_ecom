@@ -112,11 +112,11 @@ res.status(201).json({
 
 const editProduct = async (req, res) => {
   try {
-    let product = await productModel.findOne({ _id: req.params.id });
+    let product = await productModel.findById(req.params.id);
 
-    res.render("edit", {
-      product
-    });
+   res.status(200).json({
+    product
+   })
   } catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
@@ -137,29 +137,22 @@ res.status(200).json({
 
 const updateProduct = async (req, res) => {
   try {
-    // const imgname = saltedMd5(req.file.originalname, 'SUPER-S@LT!');
-    // const fileName = imgname + path.extname(req.file.originalname);
 
-    // const file = app.locals.bucket.file(fileName);
-    // const stream = file.createWriteStream();
-
-    // stream.on('error', (err) => {
-    //   throw new Error(`Failed to upload image to Firebase Storage: ${err.message}`);
-    // });
-
-    // stream.on('finish', async () => {
-
-    let { name, price, discount, description, seller, stock, category } = req.body;
+    let { image, name, price, discount, description, seller, stock, category } = req.body;
 
     let updatedProduct = await productModel.findOneAndUpdate(
       { _id: req.params.id },
       { 
-        // image : fileName,
+        image,
          name, price, discount, description, seller, stock, category },
       { new: true }
     );
 
-    res.redirect('/');
+res.status(200).json({
+  status:"success",
+  response:"Product Updated"
+})
+
   }
 
   // stream.end(req.file.buffer);

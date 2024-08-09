@@ -11,6 +11,6 @@ router.post('/findproduct', findProduct);
 router.get('/find', findProduct); 
 router.get('/edit/:id',/*isOwnerLoggedIn,*/editProduct)
 router.get('/delete',/*isOwnerLoggedIn,*/deleteProduct)
-router.post('/update/:id',upload.single('image')/*,isOwnerLoggedIn*/, updateProduct)
+router.post('/update/:id'/*,isOwnerLoggedIn*/, updateProduct)
 
 module.exports = router
