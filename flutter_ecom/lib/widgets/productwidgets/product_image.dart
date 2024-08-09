@@ -15,6 +15,6 @@ class ProductImage extends StatelessWidget {
         .make()
         .p8()
         // .hPCT(context: context, heightPCT: 100)
-        .wPCT(context: context, widthPCT: 40);
+        .wPCT(context: context, widthPCT: 36);
   }
 }

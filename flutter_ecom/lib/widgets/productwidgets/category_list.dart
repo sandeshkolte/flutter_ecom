@@ -87,7 +87,7 @@ class CategoryItem extends StatelessWidget {
               ],
             ).pOnly(right: 8),
           ],
-        ).p(context.isMobile ? 2 : 16),
+        ).p2(),
       )
     ];
     return VxBox(
@@ -100,7 +100,7 @@ class CategoryItem extends StatelessWidget {
                   ))
         .color(context.cardColor)
         .rounded
-        .square(180)
+        .square(150)
         .make()
         .py2();
   }

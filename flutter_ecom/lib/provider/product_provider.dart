@@ -8,9 +8,13 @@ import 'package:http/http.dart' as http;
 class ProductProvider with ChangeNotifier {
   // late Items product;
 
-   List<Items> _items = [];
+  List<Items> _items = [];
 
   List<Items> get items => _items;
+
+  ProductProvider() {
+    fetchProduct();
+  }
 
   Future<void> fetchProduct() async {
     try {
@@ -32,5 +36,4 @@ class ProductProvider with ChangeNotifier {
       debugPrint('Failed to Load data: $e');
     }
   }
-
 }

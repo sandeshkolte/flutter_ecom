@@ -5,6 +5,9 @@ const productModel = require('../models/product')
 const home =  async(req,res)=>{
     let products = await productModel.find();
   
+    res.status(200).json({
+      response:products
+    })
       res.render("panel",{
           products
       })

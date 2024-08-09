@@ -13,12 +13,7 @@ class AddToCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // VxState.watch(context, on: [AddMutation, RemoveMutation]);
-    // final CartModel _cart = (VxState.store as MyStore).cart;
-    // bool isInCart = _cart.items.contains(catalog);
     return Consumer<CartProvider>(builder: (context, value, child) {
-      // final CartModel _cart = Provider.of(context);
-
       var isInCart = value.shoppingCart.where((elem) => elem.id == product.id);
 
       return ElevatedButton(
@@ -45,18 +40,12 @@ class AddToCart extends StatelessWidget {
               value.addToCart(product);
             }
           },
-          style: ButtonStyle(
-              shape: const WidgetStatePropertyAll(StadiumBorder()),
-              backgroundColor:
-                  context.theme.textButtonTheme.style?.backgroundColor),
+          style: const ButtonStyle(
+              shape: WidgetStatePropertyAll(StadiumBorder()),
+              backgroundColor: WidgetStatePropertyAll(Vx.sky50)),
           child: isInCart.isNotEmpty
-              ? const Icon(Icons.done)
-              : Row(
-                  children: [
-                    // const Icon(Icons.add,color: Colors.white,),
-                    "cart".text.white.make(),
-                  ],
-                ));
+              ? const Icon(Icons.done).centered()
+              : "cart".text.color(Vx.indigo700).makeCentered());
     });
   }
 }

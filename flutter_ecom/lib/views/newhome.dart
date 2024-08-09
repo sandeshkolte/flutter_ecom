@@ -2,9 +2,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ecom/provider/wishlist_provider.dart';
 import 'package:flutter_ecom/theme/themes.dart';
 import 'package:flutter_ecom/widgets/app-banners.dart';
 import 'package:flutter_ecom/widgets/productwidgets/newhomelist.dart';
+import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewHome extends StatefulWidget {
@@ -16,6 +18,7 @@ class NewHome extends StatefulWidget {
 
 class _NewHomeState extends State<NewHome> {
   final _controller = CarouselController();
+  // final wishListProvider = WishListProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +41,27 @@ class _NewHomeState extends State<NewHome> {
               fit: BoxFit.cover, image: AssetImage("assets/images/logo.png")),
         ),
         actions: [
-          IconButton(
-              style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(context.canvasColor)),
-              onPressed: () {},
-              icon: const Icon(Icons.notifications_none_rounded))
+          Consumer<WishListProvider>(
+            builder: (BuildContext context, WishListProvider wishListProvider,
+                    Widget? child) =>
+                IconButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                WidgetStatePropertyAll(context.canvasColor)),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/wish');
+                        },
+                        icon: const Icon(Icons.notifications_none_rounded))
+                    .badge(
+              position: VxBadgePosition.rightTop,
+              count: wishListProvider.wishList.length,
+              textStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(

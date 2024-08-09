@@ -15,6 +15,10 @@ class UserProvider with ChangeNotifier {
     return _fetchUserFuture ??= fetchUser();
   }
 
+  UserProvider() {
+    fetchUser();
+  }
+
   Future<void> fetchUser() async {
     _user = await _userService.fetchUser();
     notifyListeners();

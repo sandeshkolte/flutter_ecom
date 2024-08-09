@@ -18,6 +18,7 @@ import 'package:flutter_ecom/views/profile_page.dart';
 // import 'package:flutter_ecom/views/login_page.dart';
 // import 'package:flutter_ecom/views/register_page.dart';
 import 'package:flutter_ecom/views/shop_page.dart';
+import 'package:flutter_ecom/views/wishlist_page.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'theme/themes.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
         '/category': (context) => const CategoryPage(),
         '/orders': (context) => const OrdersPage(),
         '/profile': (context) => const ProfilePage(),
+        '/wish': (context) => const WishlistPage(),
         '/shop': (context) => const ShopPage(),
         '/cart': (context) => const CartPage(),
       },

@@ -22,6 +22,10 @@ class CartProvider extends ChangeNotifier {
     return _fetchCartFuture ??= fetchCart();
   }
 
+  CartProvider() {
+    fetchCart();
+  }
+
   Future<void> fetchCart() async {
     _shoppingCart = await _cartService.fetchCart();
     notifyListeners();

@@ -1,16 +1,20 @@
-import { useState } from 'react'
 import './App.css'
 import {Routes,Route} from 'react-router-dom'
-import Home from './components/Home'
 import Profile from './components/Profile'
+import DashBoard from './components/DashBoard'
+import Layout from './components/Layout'
+import CreateProduct from './components/CreateProduct'
 
 function App() {
   return (
     <>
-    <div className='bg-zinc-900'>
+    <div className=''>
     <Routes>
-      <Route path='/' element={<Home/>} />
-      <Route path='/profile' element={<Profile/>} />
+      <Route path='/' element={<Layout/>} >
+      <Route path='' element={<DashBoard/>} />
+      <Route path='profile' element={<Profile/>} />
+      <Route path='createproduct' element={<CreateProduct/>} />
+      </Route>
     </Routes>
     </div>
     </>

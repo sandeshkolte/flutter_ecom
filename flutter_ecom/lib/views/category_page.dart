@@ -88,7 +88,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 ),
               ],
             ).px2(),
-            Expanded(child: CategoryList(category: value)),
+            CategoryList(category: value).p16().expand(),
           ],
         ),
       ),

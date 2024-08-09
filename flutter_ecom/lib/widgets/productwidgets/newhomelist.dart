@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/models/product_model.dart';
 import 'package:flutter_ecom/provider/wishlist_provider.dart';
+import 'package:flutter_ecom/theme/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../provider/product_provider.dart';
@@ -65,8 +66,11 @@ class DisplayItem extends StatelessWidget {
                 right: 0,
                 child: Consumer<WishListProvider>(
                   builder: (context, wishProvider, child) => IconButton(
-                    style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(Colors.white)),
+                    iconSize: 20,
+                    padding: const EdgeInsets.all(2),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            WidgetStatePropertyAll(MyTheme.blackBlakish)),
                     onPressed: () {
                       if (wishProvider.wishList.contains(product)) {
                         wishProvider.removeList(product);
@@ -77,9 +81,12 @@ class DisplayItem extends StatelessWidget {
                     icon: wishProvider.wishList.contains(product)
                         ? const Icon(
                             Icons.favorite,
-                            color: Colors.red,
+                            color: Colors.white,
                           )
-                        : const Icon(Icons.favorite_outline),
+                        : const Icon(
+                            Icons.favorite_outline,
+                            color: Colors.white,
+                          ),
                   ),
                 ).p4(),
               )

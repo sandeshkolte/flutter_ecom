@@ -55,6 +55,8 @@ const getProduct = async (req, res) => {
     res.status(400).json({ status: "Error", response: err.message });
   }
 };
+
+
 const findProduct = async (req, res) => {
   try {
     const { category } = req.query;
@@ -68,19 +70,9 @@ const findProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    // const imgname = saltedMd5(req.file.originalname, 'SUPER-S@LT!');
-    // const fileName = imgname + path.extname(req.file.originalname);
-
-    // const file = app.locals.bucket.file(fileName);
-    // const stream = file.createWriteStream();
-
-    // stream.on('error', (err) => {
-    //   throw new Error(`Failed to upload image to Firebase Storage: ${err.message}`);
-    // });
-
-    // stream.on('finish', async () => {
       let {
-        name,image,
+        name,
+        image,
         price,
         discount,
         description,
@@ -92,8 +84,8 @@ const createProduct = async (req, res) => {
       console.log("Request Body:", req.body);
 
       let product = new productModel({
-        // image: fileName, // Save only the file name or URL if available
-        name,image,
+        name,
+        image,
         price,
         discount,
         description,
@@ -103,7 +95,12 @@ const createProduct = async (req, res) => {
       });
 
       await product.save();
-      res.redirect('/');
+res.status(201).json({
+  status:"success",
+  response:"Product Created Successfully"
+})
+
+      // res.redirect('/');
     }
 
     // stream.end(req.file.buffer);
@@ -120,6 +117,19 @@ const editProduct = async (req, res) => {
     res.render("edit", {
       product
     });
+  } catch (err) {
+    res.status(400).json({ status: "Error", response: err.message });
+  }
+};
+
+const deleteProduct = async (req, res) => {
+  try {
+    console.log(req.query.id);
+    let product = await productModel.findOneAndDelete({ _id: req.query.id });
+res.status(200).json({
+  status:"success",
+  response: `Item deleted`
+})
   } catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
@@ -159,6 +169,6 @@ const updateProduct = async (req, res) => {
 };
 
 // Middleware to handle file uploads in createProduct
-// app.post('/create-product', upload.single('file'), createProduct);
+// app.post('/create-product', upload.single('file'), createProduct); 
 
-module.exports = {fetchProducts, createProduct, updateProduct, getProduct, findProduct, editProduct }
+module.exports = {fetchProducts, createProduct, updateProduct, getProduct, findProduct, editProduct,deleteProduct }
