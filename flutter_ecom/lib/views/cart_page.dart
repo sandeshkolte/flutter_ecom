@@ -246,7 +246,9 @@ class _CartTotal extends StatelessWidget {
       }
 
       // Clear the cart after adding items to orders
-      cartProvider.clearCart();
+       for (var item in cartProvider.shoppingCart) {
+        cartProvider.removeFromCart(item.id);
+      }
     }
 
     void handlePaymentError(PaymentFailureResponse response) {

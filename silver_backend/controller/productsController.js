@@ -29,21 +29,21 @@ const redis = new Redis({
   password: process.env.REDISPASS,
 })
 
-const fetchProducts = async (req,res)=>{
+const fetchProducts = async (req, res) => {
 
   let products = await redis.get("products")
 
-  if(products){
+  if (products) {
     console.log("Get from cache")
     return res.json({
-      products:JSON.parse(products)
+      products: JSON.parse(products)
     })
   }
 
- products = await productModel.find()
-await redis.setex("products",30,JSON.stringify(products))
+  products = await productModel.find()
+  await redis.setex("products", 30, JSON.stringify(products))
 
-res.status(200).json({ status: "success", response: products })
+  res.status(200).json({ status: "success", response: products })
 
 }
 
@@ -60,8 +60,8 @@ const getProduct = async (req, res) => {
 const findProduct = async (req, res) => {
   try {
     const { category } = req.query;
-  const product = await productModel.find({ category: { $regex: category, $options: "i" } });
-      res.status(200).json({ status: "success", response: product });
+    const product = await productModel.find({ category: { $regex: category, $options: "i" } });
+    res.status(200).json({ status: "success", response: product });
   } catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
@@ -70,42 +70,40 @@ const findProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-      let {
-        name,
-        image,
-        price,
-        discount,
-        description,
-        seller,
-        stock,
-        category,
-      } = req.body;
+    let {
+      name,
+      image,
+      price,
+      discount,
+      description,
+      seller,
+      stock,
+      category,
+    } = req.body;
 
-      console.log("Request Body:", req.body);
+    console.log("Request Body:", req.body);
 
-      let product = new productModel({
-        name,
-        image,
-        price,
-        discount,
-        description,
-        seller,
-        stock,
-        category
-      });
+    let product = new productModel({
+      name,
+      image,
+      price,
+      discount,
+      description,
+      seller,
+      stock,
+      category
+    });
 
-      await product.save();
-res.status(201).json({
-  status:"success",
-  response:"Product Created Successfully"
-})
+    await product.save();
+    res.status(201).json({
+      status: "success",
+      response: "Product Created Successfully"
+    })
 
-      // res.redirect('/');
-    }
+  }
 
-    // stream.end(req.file.buffer);
 
-   catch (err) {
+  catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
 }
@@ -114,9 +112,9 @@ const editProduct = async (req, res) => {
   try {
     let product = await productModel.findById(req.params.id);
 
-   res.status(200).json({
-    product
-   })
+    res.status(200).json({
+      product
+    })
   } catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
@@ -126,10 +124,10 @@ const deleteProduct = async (req, res) => {
   try {
     console.log(req.query.id);
     let product = await productModel.findOneAndDelete({ _id: req.query.id });
-res.status(200).json({
-  status:"success",
-  response: `Item deleted`
-})
+    res.status(200).json({
+      status: "success",
+      response: `Item deleted`
+    })
   } catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
@@ -142,21 +140,22 @@ const updateProduct = async (req, res) => {
 
     let updatedProduct = await productModel.findOneAndUpdate(
       { _id: req.params.id },
-      { 
+      {
         image,
-         name, price, discount, description, seller, stock, category },
+        name, price, discount, description, seller, stock, category
+      },
       { new: true }
     );
 
-res.status(200).json({
-  status:"success",
-  response:"Product Updated"
-})
+    res.status(200).json({
+      status: "success",
+      response: "Product Updated"
+    })
 
   }
 
   // stream.end(req.file.buffer);
-   catch (err) {
+  catch (err) {
     res.status(400).json({ status: "Error", response: err.message });
   }
 };
@@ -164,4 +163,4 @@ res.status(200).json({
 // Middleware to handle file uploads in createProduct
 // app.post('/create-product', upload.single('file'), createProduct); 
 
-module.exports = {fetchProducts, createProduct, updateProduct, getProduct, findProduct, editProduct,deleteProduct }
+module.exports = { fetchProducts, createProduct, updateProduct, getProduct, findProduct, editProduct, deleteProduct }

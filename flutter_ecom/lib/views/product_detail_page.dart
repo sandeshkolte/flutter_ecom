@@ -11,6 +11,8 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(product.name.toString());
+
     final mrpAmount = product.discount + product.price;
 
     return Scaffold(
@@ -18,31 +20,31 @@ class ProductDetailPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
-      bottomNavigationBar: Container(
-        color: context.cardColor,
-        child: ButtonBar(
-          alignment: MainAxisAlignment.spaceBetween,
-          buttonPadding: EdgeInsets.zero,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                mrpAmount.text
-                    .textStyle(
-                        const TextStyle(decoration: TextDecoration.lineThrough))
-                    .lg
-                    .make()
-                    .pOnly(right: 5),
-                "₹".text.xl2.bold.green700.make(),
-                "${product.price}".text.bold.green700.xl4.make(),
-              ],
-            ),
-            AddToCart(product: product)
-          ],
-        ).p32(),
-      ),
+      // bottomNavigationBar: Container(
+      //   color: context.cardColor,
+      //   child: ButtonBar(
+      //     alignment: MainAxisAlignment.spaceBetween,
+      //     buttonPadding: EdgeInsets.zero,
+      //     children: [
+      //       Row(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           mrpAmount.text
+      //               .textStyle(
+      //                   const TextStyle(decoration: TextDecoration.lineThrough))
+      //               .lg
+      //               .make()
+      //               .pOnly(right: 5),
+      //           "₹".text.xl2.bold.green700.make(),
+      //           "${product.price}".text.bold.green700.xl4.make(),
+      //         ],
+      //       ),
+      //       AddToCart(product: product)
+      //     ],
+      //   ).p32(),
+      // ),
+
       body: SafeArea(
-        bottom: false,
         child: Column(
           children: [
             Hero(
@@ -57,62 +59,87 @@ class ProductDetailPage extends StatelessWidget {
               child: Container(
                 width: context.screenWidth,
                 color: context.cardColor,
-                child: Column(
-                  children: [
-                    product.name.text.xl4.bold
-                        .color(context.primaryColor)
-                        .make(),
-                    product.description.text.lg
-                        .textStyle(context.captionStyle)
-                        .make()
-                        .p32(),
-                    Container(
-                      width: (context).screenWidth,
-                      margin: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Flex(
-                        direction: Axis.vertical,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          product.stock <= 0
-                              ? "Out of Stock".text.lg.bold.red500.make()
-                              : product.stock == 1
-                                  ? "Only ${product.stock} left in stock"
-                                      .text
-                                      .lg
-                                      .bold
-                                      .red500
-                                      .make()
-                                  : "Only ${product.stock} left in stock"
-                                      .text
-                                      .lg
-                                      .bold
-                                      .emerald500
-                                      .make(),
-                          ElevatedButton(
-                            onPressed: null,
-                            child: product.category.text.black.make(),
-                          ).py4(),
-                        ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      product.name.text.xl4.bold
+                          .color(context.primaryColor)
+                          .makeCentered(),
+                      product.description.text.lg
+                          .textStyle(context.captionStyle)
+                          .make()
+                          .p32(),
+                      Container(
+                        width: (context).screenWidth,
+                        margin: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Flex(
+                          direction: Axis.vertical,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            product.stock <= 0
+                                ? "Out of Stock".text.lg.bold.red500.make()
+                                : product.stock == 1
+                                    ? "Only ${product.stock} left in stock"
+                                        .text
+                                        .lg
+                                        .bold
+                                        .red500
+                                        .make()
+                                    : "Only ${product.stock} left in stock"
+                                        .text
+                                        .lg
+                                        .bold
+                                        .emerald500
+                                        .make(),
+                            ElevatedButton(
+                              onPressed: null,
+                              child: product.category.text.black.make(),
+                            ).py4(),
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: (context).screenWidth,
-                      margin: const EdgeInsets.symmetric(horizontal: 30),
-                      height: 80,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Vx.neutral100),
-                      child: Row(
-                        children: [
-                          "Seller : ".text.xl.bold.make(),
-                          product.seller.text.lg.make()
-                        ],
-                      ).p12(),
-                    )
-                  ],
-                ).py16(),
+                      Container(
+                        width: (context).screenWidth,
+                        margin: const EdgeInsets.symmetric(horizontal: 30),
+                        height: 80,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Vx.neutral100),
+                        child: Row(
+                          children: [
+                            "Seller : ".text.xl.bold.make(),
+                            product.seller.text.lg.make()
+                          ],
+                        ).p12(),
+                      )
+                    ],
+                  ).py16(),
+                ),
               ),
             )),
+            Container(
+              color: context.cardColor,
+              child: ButtonBar(
+                alignment: MainAxisAlignment.spaceBetween,
+                buttonPadding: EdgeInsets.zero,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      mrpAmount.text
+                          .textStyle(const TextStyle(
+                              decoration: TextDecoration.lineThrough))
+                          .lg
+                          .make()
+                          .pOnly(right: 5),
+                      "₹".text.xl2.bold.green700.make(),
+                      "${product.price}".text.bold.green700.xl4.make(),
+                    ],
+                  ),
+                  AddToCart(product: product)
+                ],
+              ).p32(),
+            ),
           ],
         ),
       ),

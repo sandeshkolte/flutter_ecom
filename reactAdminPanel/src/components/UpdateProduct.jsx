@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-const baseUrl = "http://192.168.1.4:3000/products/";
+const baseUrl = "http://192.168.1.5:3000/products/";
 
 
 const UpdateProduct = () => {

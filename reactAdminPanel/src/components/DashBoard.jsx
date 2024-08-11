@@ -3,44 +3,46 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const DashBoard = () => {
-    const baseUrl = "http://192.168.1.4:3000/products/";
+    const baseUrl = "http://192.168.1.5:3000/products/";
 
     const [products, setProduct] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-const deleteItem = async(id) =>{
-    try{
-const {data} = await axios.get(`${baseUrl}delete/?id=${id}`)
-    }catch(err){
-        if (axios.isCancel(error)) {
-            console.log("Fetch aborted");
-            return;
+    const fetchProducts = async () => {
+        try {
+            const { data } = await axios.get(baseUrl); // Fetch data based on the current page
+            setProduct(data.response); // Set the fetched data
+            console.log(data.response);
+
+            setError(null); // Clear any previous errors
+        } catch (error) {
+            if (axios.isCancel(error)) {
+                console.log("Fetch aborted"); // Log a message when the request is intentionally aborted
+                return; // Exit the function to prevent further error handling
+            }
+            setError(error.message); // Handle and set the error message
+        } finally {
+            setIsLoading(false); // Turn off loading indicator
         }
     }
-}
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const { data } = await axios.get(baseUrl); // Fetch data based on the current page
-                setProduct(data.response); // Set the fetched data
-                console.log(data.response);
-
-                setError(null); // Clear any previous errors
-            } catch (error) {
-                if (axios.isCancel(error)) {
-                    console.log("Fetch aborted"); // Log a message when the request is intentionally aborted
-                    return; // Exit the function to prevent further error handling
-                }
-                setError(error.message); // Handle and set the error message
-            } finally {
-                setIsLoading(false); // Turn off loading indicator
+    const deleteItem = async (id) => {
+        try {
+           await axios.get(`${baseUrl}delete/?id=${id}`)
+            fetchProducts()
+        } catch (err) {
+            if (axios.isCancel(error)) {
+                console.log("Fetch aborted");
+                return;
             }
         }
+    }
+
+    useEffect(() => {
+
         fetchProducts();
 
-    
         return () => {
             setIsLoading(true);
         }
@@ -79,11 +81,11 @@ const {data} = await axios.get(`${baseUrl}delete/?id=${id}`)
                 </div>
                 <div className='bg-gray-200 w-full h-[2px]'></div>
                 <br />
-                
+
                 <div className='max-h-96 overflow-auto'>
                     {error && <div className='flex justify-center align-middle text-center' >
                         <h1 className='text-gray-400 text-center text-xl'>{error}</h1>
-                        </div>}
+                    </div>}
                     {isLoading && <div> <h1 className='text-gray-400 text-center text-xl'>Loading...</h1></div>}
                     <div className="grid grid-cols-8 gap-4">
                         {products.map((product) => (
@@ -99,7 +101,7 @@ const {data} = await axios.get(`${baseUrl}delete/?id=${id}`)
                                 <h3 className="col-span-1">{product.category}</h3>
                                 <div className="col-span-1 flex flex-col space-y-2">
                                     <Link className="rounded-lg text-center py-1" to={`/update/${product._id}`}><i className="ri-edit-box-line px-2 py-1 bg-gray-100 rounded-lg"></i></Link>
-                                    <button className="rounded-lg text-center py-1" onClick={(e) =>deleteItem(product._id)} ><i className="ri-delete-bin-6-line bg-gray-100 rounded-lg"></i></button>
+                                    <button className="rounded-lg text-center py-1" onClick={(e) => deleteItem(product._id)} ><i className="ri-delete-bin-6-line bg-gray-100 rounded-lg"></i></button>
                                 </div>
                             </React.Fragment>
                         ))}

@@ -25,7 +25,9 @@ class DisplayList extends StatelessWidget {
           return GridView.builder(
             shrinkWrap: true,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, crossAxisSpacing: 2),
+              crossAxisCount: 2,
+              crossAxisSpacing: 2,
+            ),
             itemCount: productProvider.items.length,
             itemBuilder: (context, index) {
               final product = productProvider.items[index];
@@ -93,7 +95,12 @@ class DisplayItem extends StatelessWidget {
             ]),
           ),
           const Spacer(), // Add spacer to push the text to the bottom
-          product.name.text.bold.color(context.primaryColor).make().p2(),
+          product.name.text.bold
+              .maxLines(1)
+              .overflow(TextOverflow.ellipsis)
+              .color(context.primaryColor)
+              .make()
+              .p2(),
         ],
       ),
     );

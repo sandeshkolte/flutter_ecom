@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecom/common/shared_pref.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
 import 'package:flutter_ecom/provider/order_provider.dart';
+import 'package:flutter_ecom/provider/wishlist_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:http/http.dart' as http;
@@ -71,6 +72,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final wishProvider = Provider.of<WishListProvider>(context);
+
     return Scaffold(
       backgroundColor: context.canvasColor,
       appBar: AppBar(
@@ -145,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Column(
                               children: [
                                 "Wishlist".text.lg.make(),
-                                "5".text.make()
+                                wishProvider.wishList.length.text.make()
                               ],
                             ),
                           ),
