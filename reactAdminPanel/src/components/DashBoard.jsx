@@ -25,7 +25,7 @@ const DashBoard = () => {
 
     const deleteItem = async (id) => {
         try {
-            await axios.delete(`${baseUrl}/delete/?id=${id}`); // Use DELETE method
+            await axios.get(`${baseUrl}/delete/?id=${id}`); // Use DELETE method
             fetchProducts(); // Refresh product list after deletion
         } catch (error) {
             if (!axios.isCancel(error)) {
