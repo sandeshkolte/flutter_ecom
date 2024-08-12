@@ -27,7 +27,9 @@ class _ProfilePageState extends State<ProfilePage> {
         final decodedData = jsonDecode(response.body);
         final data = decodedData["response"];
         sharedPref.setUid("");
-        Navigator.pushNamed(context, '/');
+        var uid = await sharedPref.getUid();
+        debugPrint("User uid set to $uid");
+        Navigator.pushReplacementNamed(context, '/');
       } else {
         debugPrint("Response failed with code ${response.statusCode}");
       }

@@ -12,10 +12,12 @@ const getUserDetails = async (req, res) => {
 
         let user = await userModel.findById(userid)
 
-        if (!user) return res.status(403).json({
+        if (!user) {
+            return res.status(403).json({
             status: "Error",
             response: "no User"
         })
+        }
         else {
             return res.status(200).json({
                 status: "success",
@@ -37,10 +39,12 @@ const registerUser = async (req, res) => {
 
     let user = await userModel.findOne({ email })
 
-    if (user) return res.status(403).json({
+    if (user) {
+        return res.status(403).json({
         status: "Error",
         response: "User already exist"
     })
+    }
     else {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(password, salt, async (err, hash) => {
@@ -73,27 +77,31 @@ const loginUser = async (req, res) => {
 
     let user = await userModel.findOne({ email })
 
-    if (!user) return res.status(403).json({
-        status: "Error",
-        response: "Email or Password Incorrect"
-    })
+    if (!user) {
+        return res.status(403).json({
+       status: "Error",
+       response: "Email or Password Incorrect"
+   })
+    }else{
 
-    bcrypt.compare(password, user.password, (err, result) => {
-        if (result) {
-            const token = generateToken(user)
-            res.cookie("token", token)
-            res.status(200).json({
-                status: "Success",
-                response: { user, token }
-            })
-        } else {
-            res.status(403).json({
-                status: "Error",
-                response: "Email or Password Incorrect"
-            })
-        }
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (result) {
+                const token = generateToken(user)
+                res.cookie("token", token)
+                res.status(200).json({
+                    status: "Success",
+                    response: { user, token }
+                })
+            } else {
+                res.status(403).json({
+                    status: "Error",
+                    response: "Email or Password Incorrect"
+                })
+            }
+    
+        })
+    }
 
-    })
 }
 
 
