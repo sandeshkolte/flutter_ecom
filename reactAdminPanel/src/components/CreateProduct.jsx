@@ -4,8 +4,7 @@ import { ref, getDownloadURL, uploadBytes, uploadBytesResumable } from "firebase
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
-const baseUrl = "http://192.168.1.5:3000/products/create";
+import { baseUrl } from '../common';
 
 
 const CreateProduct = () => {
@@ -68,7 +67,7 @@ const handleFormSubmit = async(e) =>{
     console.log(JSON.stringify(formData))
     
     try{
-      await axios.post(baseUrl,formData).then((response)=>{
+      await axios.post(baseUrl+'create',formData).then((response)=>{
         console.log(`Form uploaded with data:`,response)
         toast.success("Product Created Successfully!")
         setformData({

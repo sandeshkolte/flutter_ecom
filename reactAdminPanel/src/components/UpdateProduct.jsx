@@ -4,8 +4,7 @@ import { ref, getDownloadURL, uploadBytes, uploadBytesResumable } from "firebase
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
-const baseUrl = "http://192.168.1.5:3000/products/";
+import { baseUrl } from '../common';
 
 
 const UpdateProduct = () => {

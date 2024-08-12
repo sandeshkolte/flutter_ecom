@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { baseUrl } from '../common';
 
 const DashBoard = () => {
-    const baseUrl = "http://192.168.1.5:3000/products/";
 
     const [products, setProduct] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
