@@ -54,13 +54,15 @@ const UpdateProduct = () => {
     }
 
 
+const navigate = useNavigate()
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
             await axios.post(baseUrl+`update/${id} `, formData)
                 .then((response) => {
                     toast.success("Product Updated Successfully!")
-                })
+                }).finally(()=> navigate('/'))
         } catch (err) {
             if (axios.isCancel(err)) {
                 console.log("Fetch aborted");
