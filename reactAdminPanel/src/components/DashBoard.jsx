@@ -4,48 +4,43 @@ import { Link } from 'react-router-dom';
 import { baseUrl } from '../common';
 
 const DashBoard = () => {
-
-    const [products, setProduct] = useState([]);
+    const [products, setProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchProducts = async () => {
         try {
-            const { data } = await axios.get(baseUrl); // Fetch data based on the current page
-            setProduct(data.response); // Set the fetched data
-            console.log(data.response);
-
+            setIsLoading(true); // Start loading
+            const { data } = await axios.get(baseUrl); // Fetch data
+            setProducts(data.response); // Set the fetched data
             setError(null); // Clear any previous errors
         } catch (error) {
-            if (axios.isCancel(error)) {
-                console.log("Fetch aborted"); // Log a message when the request is intentionally aborted
-                return; // Exit the function to prevent further error handling
+            if (!axios.isCancel(error)) {
+                setError(error.message); // Handle and set the error message
             }
-            setError(error.message); // Handle and set the error message
         } finally {
             setIsLoading(false); // Turn off loading indicator
         }
-    }
+    };
 
     const deleteItem = async (id) => {
         try {
-           await axios.get(`${baseUrl}delete/?id=${id}`)
-            fetchProducts()
-        } catch (err) {
-            if (axios.isCancel(error)) {
-                console.log("Fetch aborted");
-                return;
+            await axios.delete(`${baseUrl}/delete/?id=${id}`); // Use DELETE method
+            fetchProducts(); // Refresh product list after deletion
+        } catch (error) {
+            if (!axios.isCancel(error)) {
+                console.error("Failed to delete:", error.message);
             }
         }
-    }
+    };
 
     useEffect(() => {
-
         fetchProducts();
 
+        // No need to set isLoading to true in cleanup
         return () => {
-            setIsLoading(true);
-        }
+            // Cleanup code if necessary
+        };
     }, []);
 
     return (
@@ -83,10 +78,16 @@ const DashBoard = () => {
                 <br />
 
                 <div className='max-h-96 overflow-auto'>
-                    {error && <div className='flex justify-center align-middle text-center' >
-                        <h1 className='text-gray-400 text-center text-xl'>{error}</h1>
-                    </div>}
-                    {isLoading && <div> <h1 className='text-gray-400 text-center text-xl'>Loading...</h1></div>}
+                    {error && (
+                        <div className='flex justify-center align-middle text-center'>
+                            <h1 className='text-gray-400 text-center text-xl'>{error}</h1>
+                        </div>
+                    )}
+                    {isLoading && (
+                        <div>
+                            <h1 className='text-gray-400 text-center text-xl'>Loading...</h1>
+                        </div>
+                    )}
                     <div className="grid grid-cols-8 gap-4">
                         {products.map((product) => (
                             <React.Fragment key={product._id}>
@@ -100,8 +101,12 @@ const DashBoard = () => {
                                 <h3 className="col-span-1">{product.stock}</h3>
                                 <h3 className="col-span-1">{product.category}</h3>
                                 <div className="col-span-1 flex flex-col space-y-2">
-                                    <Link className="rounded-lg text-center py-1" to={`/update/${product._id}`}><i className="ri-edit-box-line px-2 py-1 bg-gray-100 rounded-lg"></i></Link>
-                                    <button className="rounded-lg text-center py-1" onClick={(e) => deleteItem(product._id)} ><i className="ri-delete-bin-6-line bg-gray-100 rounded-lg"></i></button>
+                                    <Link className="rounded-lg text-center py-1" to={`/update/${product._id}`}>
+                                        <i className="ri-edit-box-line px-2 py-1 bg-gray-100 rounded-lg"></i>
+                                    </Link>
+                                    <button className="rounded-lg text-center py-1" onClick={() => deleteItem(product._id)}>
+                                        <i className="ri-delete-bin-6-line bg-gray-100 rounded-lg"></i>
+                                    </button>
                                 </div>
                             </React.Fragment>
                         ))}
@@ -109,7 +114,7 @@ const DashBoard = () => {
                 </div>
             </section>
         </div>
-    )
+    );
 }
 
 export default DashBoard;
