@@ -1,1 +1,1 @@
-export const baseUrl= "https://flutter-ecom.onrender.com/"
+export const baseUrl= "https://flutter-ecom.onrender.com/products/"
