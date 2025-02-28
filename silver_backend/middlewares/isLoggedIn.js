@@ -29,23 +29,26 @@ next()
 const isOwnerLoggedIn = async(req,res,next)=>{
 
 if(!req.cookies.token) {
+   // res.send("Login First")
 return  res.status(403).json({
    status:"Error",
    response: "You need to login first"
 })
-}
-try{
+}else{
 
-   let decoded =  jwt.verify(req.cookies.token,process.env.JWT_SECRET)
-   let owner = await ownerModel.findOne({email:decoded.email}).select("-password")
-req.owner = owner
-
-next()
-}catch(err){
-   res.status(403).json({
-      status:"Error",
-      response: err.message
-   })
+   try{
+   
+      let decoded =  jwt.verify(req.cookies.token,process.env.JWT_SECRET)
+      let owner = await ownerModel.findOne({email:decoded.email}).select("-password")
+   req.owner = owner
+   
+   next()
+   }catch(err){
+      res.status(403).json({
+         status:"Error",
+         response: err.message
+      })
+   }
 }
 
 }

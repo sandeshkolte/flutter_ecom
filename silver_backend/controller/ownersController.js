@@ -19,7 +19,7 @@ const createOwner = async (req, res) => {
             })
             else {
                 let createdOwner = ownerModel.create({
-                    fullname, email, password, picture, brandName
+                    fullname, email, password: hash, picture, brandName
                 })
 
                 const token = generateToken(createdOwner)

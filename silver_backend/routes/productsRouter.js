@@ -6,11 +6,11 @@ const upload = require('../config/multer-config')
 
 router.get('/',getProduct)
 // router.get('/',fetchProducts)
-router.post('/create', createProduct)
+router.post('/create',isOwnerLoggedIn, createProduct)
 router.post('/findproduct', findProduct);
 router.get('/find', findProduct); 
-router.get('/edit/:id',/*isOwnerLoggedIn,*/editProduct)
-router.get('/delete/',/*isOwnerLoggedIn,*/deleteProduct)
-router.post('/update/:id'/*,isOwnerLoggedIn*/, updateProduct)
+router.get('/edit/:id',isOwnerLoggedIn,editProduct)
+router.get('/delete/',isOwnerLoggedIn,deleteProduct)
+router.post('/update/:id',isOwnerLoggedIn, updateProduct)
 
 module.exports = router
