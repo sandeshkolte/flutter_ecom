@@ -57,8 +57,8 @@ const CreateProduct = () => {
 
     const { id, value } = e.target
 
-    setformData({ ...formData, [id]: value })
 
+    setformData({ ...formData, [id]: value })
   }
 
 

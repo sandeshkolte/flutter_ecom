@@ -8,7 +8,6 @@ const Aside = () => {
       <aside>
         <div className='p-5'>
           <img className='h-20 object-cover rounded-lg' src="src/assets/applogo.png" alt="logo" />
-        
           <br />
           <ul className='flex flex-col gap-5'>
             <li>
