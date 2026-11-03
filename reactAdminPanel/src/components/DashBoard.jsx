@@ -94,7 +94,9 @@ const DashBoard = () => {
                         {products.map((product) => (
                             <React.Fragment key={product._id}>
                                 <div className="col-span-1 h-28 w-28 rounded-lg bg-gray-100">
-                                    <img src={product.image} alt="product" className="object-cover w-full h-full" />
+                                    {product.image && (
+                                        <img src={product.image} alt="product" className="object-cover w-full h-full" />
+                                    )}
                                 </div>
                                 <h3 className="col-span-1">{product.name}</h3>
                                 <h3 className="col-span-1">{product.seller}</h3>

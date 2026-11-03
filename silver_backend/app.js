@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const userRouter = require('./routes/usersRouter');
 const productsRouter = require('./routes/productsRouter');
@@ -15,7 +17,6 @@ const PORT = process.env.PORT || 9000;
 // Middleware
 app.use(cors());
 app.set("view engine", "ejs")
-require('dotenv').config();
 app.use(appLogger);
 app.use(cookieParser());
 app.use(express.json());

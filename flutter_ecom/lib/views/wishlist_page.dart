@@ -4,7 +4,6 @@ import 'package:flutter_ecom/provider/wishlist_provider.dart';
 import 'package:flutter_ecom/widgets/productwidgets/add_to_cart.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
-import '../widgets/productwidgets/product_image.dart';
 import 'product_detail_page.dart';
 
 class WishlistPage extends StatefulWidget {
@@ -121,7 +120,11 @@ class WishImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(image)
+    return Image.network(
+      image,
+      errorBuilder: (context, error, stackTrace) =>
+          const Icon(Icons.image_not_supported_outlined),
+    )
         .box
         .rounded
         .p3

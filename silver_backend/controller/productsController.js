@@ -1,31 +1,9 @@
 const productModel = require('../models/product');
-const mongoose = require('mongoose');
-const saltedMd5 = require("salted-md5");
-const path = require('path');
-const express = require('express');
-const app = express();
-const multer = require('multer');
-// const redis = require('../app');
-// const admin = require("firebase-admin");
-// const serviceAccount = require("../serviceAccountKey.json");
-require('dotenv').config();
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   storageBucket: process.env.BUCKET_URL
-// });
-
-// app.locals.bucket = admin.storage().bucket();
-
-// Set up multer for handling file uploads
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
 const Redis = require('ioredis');
 
 const redis = new Redis({
   host: process.env.REDISHOST,
-  port: 11327,
+  port: 11582,
   password: process.env.REDISPASS,
 })
 
@@ -159,8 +137,5 @@ const updateProduct = async (req, res) => {
     res.status(400).json({ status: "Error", response: err.message });
   }
 };
-
-// Middleware to handle file uploads in createProduct
-// app.post('/create-product', upload.single('file'), createProduct); 
 
 module.exports = { fetchProducts, createProduct, updateProduct, getProduct, findProduct, editProduct, deleteProduct }

@@ -49,8 +49,11 @@ class ProductDetailPage extends StatelessWidget {
           children: [
             Hero(
                 tag: Key(product.id.toString()),
-                child:
-                    Image.network(product.image).centered().h32(context).p(5)),
+                child: Image.network(
+                  product.image,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.image_not_supported_outlined),
+                ).centered().h32(context).p(5)),
             Expanded(
                 child: VxArc(
               height: 20.0,

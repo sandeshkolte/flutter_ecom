@@ -1,0 +1,32 @@
+{
+  "name": "silver_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "config": "^3.3.12",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.2.0",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.4",
+    "multer": "^1.4.5-lts.1",
+    "salted-md5": "^4.0.8"
+  },
+  "allowScripts": {
+    "bcrypt@5.1.1": true,
+    "protobufjs@7.3.2": true
+  }
+}

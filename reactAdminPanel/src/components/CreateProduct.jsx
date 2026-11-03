@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
-import { storage } from "../firebase"
-import { ref, getDownloadURL, uploadBytes, uploadBytesResumable } from "firebase/storage"
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { baseUrl } from '../common';
+import { baseUrl, uploadProductImage } from '../common';
 
 
 const CreateProduct = () => {
   const [progressPercent, setProgressPercent] = useState(0)
   const [formData, setformData] = useState({})
-  const [imageUrl, setimageUrl] = useState("")
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [isUploading, setIsUploading] = useState(false)
 
 
   const handleFileChange = (e) => {
@@ -18,37 +16,34 @@ const CreateProduct = () => {
     const file = e.target.files[0];
 
     if (file) {
-      setimageUrl(file);
+      setSelectedFile(file);
+      setProgressPercent(0);
+      setformData((prevData) => ({ ...prevData, image: '' }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const file = imageUrl
+    if (!selectedFile) {
+      toast.error('Choose an image before uploading.');
+      return;
+    }
 
-    if (!file) return null;
-    const storageRef = ref(storage, `files/${file.name}`)
-    const uploadTask = uploadBytesResumable(storageRef, file)
-
-    uploadTask.on("state_changed",
-      (snapshot) => {
-        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        setProgressPercent(progress)
-      },
-      (error) => {
-        alert(error)
-      },
-      () => {
-        getDownloadURL(storageRef).then((downloadURL) => {
-          console.log(downloadURL)
-          setimageUrl(downloadURL)
-          setformData((prevData) => ({
-            ...prevData,
-            image: downloadURL,
-          }));
-        })
-      }
-    )
+    setIsUploading(true);
+    try {
+      const image = await uploadProductImage(selectedFile, (event) => {
+        if (event.total) {
+          setProgressPercent(Math.round((event.loaded / event.total) * 100));
+        }
+      });
+      setformData((prevData) => ({ ...prevData, image }));
+      setProgressPercent(100);
+      toast.success('Image uploaded successfully.');
+    } catch (error) {
+      toast.error(error.response?.data?.response || error.message || 'Image upload failed.');
+    } finally {
+      setIsUploading(false);
+    }
   }
 
   const formChange = async (e) => {
@@ -64,8 +59,10 @@ const CreateProduct = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(JSON.stringify(formData))
+    if (!formData.image) {
+      toast.error('Upload a product image before creating the product.');
+      return;
+    }
 
     try {
       await axios.post(baseUrl + 'create', formData).then((response) => {
@@ -81,14 +78,11 @@ const CreateProduct = () => {
           category: '',
           image: ''
         });
-        console.log(JSON.stringify(formData))
+        setSelectedFile(null);
         setProgressPercent(0);
       })
     } catch (err) {
-      if (axios.isCancel(err)) {
-        console.log("Fetch aborted");
-        return;
-      }
+      toast.error(err.response?.data?.response || err.message || 'Product creation failed.');
     }
   }
 
@@ -99,7 +93,7 @@ const CreateProduct = () => {
       <form className='form' name='upload_file' onSubmit={handleFormSubmit}>
         <div className='image-section flex flex-col p-5 bg-white w-80 rounded-xl shadow-xl' >
           <input type="file" id='image' required onChange={handleFileChange} />
-          <button type='submit' onClick={handleSubmit} className='w-32 my-5 py-2 bg-teal-200 rounded-lg shadow-xl' > {progressPercent == 100 ? "Uploaded " : "Upload Image"}</button>
+          <button type='button' onClick={handleSubmit} disabled={isUploading} className='w-32 my-5 py-2 bg-teal-200 rounded-lg shadow-xl' > {isUploading ? 'Uploading...' : progressPercent === 100 ? 'Uploaded' : 'Upload Image'}</button>
           <progress value={progressPercent} className='h-1 rounded-xl' max="100" />
         </div>
         <div className="flex flex-wrap gap-3 p-5 my-5 bg-white w-full rounded-xl shadow-xl">
@@ -132,7 +126,7 @@ const CreateProduct = () => {
             <input type="text" required placeholder="category" id="category" value={formData.category} onChange={formChange} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
           </div>
         </div>
-        <input className="m-5 bg-fuchsia-200 px-5 py-2 rounded-lg shadow-xl cursor-pointer" type="submit" value="Create Product" />
+        <input className="m-5 bg-fuchsia-200 px-5 py-2 rounded-lg shadow-xl cursor-pointer" type="submit" value="Create Product" disabled={isUploading} />
       </form>
 
     </div>

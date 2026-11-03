@@ -1,42 +1,52 @@
+import 'dart:convert';
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecom/common/common.dart';
 import 'package:flutter_ecom/provider/imageurl_provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 // File? selectedImage;
 
 class ProductApi {
-  Future picImageFromGallery(BuildContext context) async {
-    final myImage = Provider.of<ImageUrlProvider>(context);
+  Future<void> picImageFromGallery(BuildContext context) async {
+    final imageProvider = Provider.of<ImageUrlProvider>(context, listen: false);
 
-    var pickedImage =
+    final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedImage == null) return;
 
-    // selectedImage = File(pickedImage.path);
-    myImage.setImage(File(pickedImage.path));
+    imageProvider.setImage(File(pickedImage.path));
 
-    await uploadImage(context);
+    await uploadImage(imageProvider);
   }
 
-  Future uploadImage(context) async {
-    final myurl = Provider.of<ImageUrlProvider>(context);
-    final myImage = Provider.of<ImageUrlProvider>(context);
+  Future<void> uploadImage(ImageUrlProvider imageProvider) async {
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl/products/upload-image'),
+    );
+    request.files.add(
+      await http.MultipartFile.fromPath(
+          'image', imageProvider.selectedImage.path),
+    );
 
-    final Reference postImageRef =
-        FirebaseStorage.instance.ref().child("Post Images");
-    var timeKey = DateTime.now();
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw HttpException(
+        'Image upload failed (${response.statusCode}): ${response.body}',
+      );
+    }
 
-    final UploadTask uploadTask =
-        postImageRef.child("$timeKey.jpg").putFile(myImage.selectedImage);
+    final result = jsonDecode(response.body) as Map<String, dynamic>;
+    final imageUrl = result['url'];
+    if (imageUrl is! String || imageUrl.isEmpty) {
+      throw const FormatException(
+          'Image upload response did not contain a URL.');
+    }
 
-    var imageUrl =
-        await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
-
-    myurl.setUrl(imageUrl.toString());
-
-    // url = imageUrl.toString();
+    imageProvider.setUrl(imageUrl);
   }
 }

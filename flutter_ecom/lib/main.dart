@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecom/provider/cart_provider.dart';
 import 'package:flutter_ecom/provider/category_provider.dart';
@@ -20,16 +19,12 @@ import 'package:flutter_ecom/views/profile_page.dart';
 import 'package:flutter_ecom/views/shop_page.dart';
 import 'package:flutter_ecom/views/wishlist_page.dart';
 import 'package:provider/provider.dart';
-import 'firebase_options.dart';
 import 'theme/themes.dart';
 import 'views/auth_screen/login_page.dart';
 import 'views/auth_screen/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ImageUrlProvider()),
