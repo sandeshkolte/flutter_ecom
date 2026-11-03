@@ -1,22 +1,49 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { baseUrl, uploadProductImage } from '../common';
 
 
 const UpdateProduct = () => {
     const [progressPercent, setProgressPercent] = useState(0)
-    const [formData, setformData] = useState({})
+    const [formData, setformData] = useState({
+        name: '',
+        description: '',
+        price: '',
+        discount: '',
+        stock: '',
+        seller: '',
+        category: '',
+        image: '',
+    })
     const [selectedFile, setSelectedFile] = useState(null)
     const [isUploading, setIsUploading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [loadError, setLoadError] = useState('')
+
+    const navigate = useNavigate()
+    const location = useLocation()
+    const { id } = useParams()
+
+    const populateForm = (product) => {
+        setformData({
+            name: product.name ?? '',
+            description: product.description ?? '',
+            price: product.price ?? '',
+            discount: product.discount ?? '',
+            stock: product.stock ?? '',
+            seller: product.seller ?? '',
+            category: product.category ?? '',
+            image: product.image ?? '',
+        })
+    }
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setSelectedFile(file);
             setProgressPercent(0);
-            setformData((prevData) => ({ ...prevData, image: '' }));
         }
     };
 
@@ -50,11 +77,9 @@ const UpdateProduct = () => {
     }
 
 
-const navigate = useNavigate()
-
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.image) {
+        if (isLoading || !formData.image) {
             toast.error('Upload a product image before saving the product.');
             return;
         }
@@ -67,50 +92,55 @@ const navigate = useNavigate()
         }
     }
 
-    const { id } = useParams()
-
     useEffect(() => {
+        let isCurrent = true;
+        const selectedProduct = location.state?.product;
 
-        const fetchProducts = async () => {
-            await axios.get(baseUrl +`edit/${id}`).then(res => {
+        const fetchProduct = async () => {
+            setIsLoading(true);
+            setLoadError('');
 
-                console.log("Form data" + JSON.stringify(res));
+            try {
+                let product = selectedProduct?._id === id
+                    ? selectedProduct
+                    : null;
 
-                const { name,
-                    description,
-                    price,
-                    discount,
-                    stock,
-                    seller,
-                    category,
-                    image,
-                } = res.data.product
+                if (!product) {
+                    const { data } = await axios.get(baseUrl);
+                    const products = data.response ?? data.products;
+                    product = Array.isArray(products)
+                        ? products.find((item) => item._id === id)
+                        : null;
+                }
 
-                setformData({
-                    ...formData,
-                    name,
-                    description,
-                    price,
-                    discount,
-                    stock,
-                    seller,
-                    category,
-                    image,
-                })
+                if (!product) {
+                    throw new Error('Product was not found.');
+                }
+
+                if (isCurrent) {
+                    populateForm(product);
+                }
+            } catch (error) {
+                if (isCurrent) {
+                    setLoadError(
+                        error.response?.data?.response ||
+                        error.message ||
+                        'Unable to load product details.'
+                    );
+                }
+            } finally {
+                if (isCurrent) {
+                    setIsLoading(false);
+                }
             }
-            ).catch(err => console.log(err)
-            )
+        };
 
-        }
-
-        fetchProducts()
-
-        console.log(formData.name)
+        fetchProduct();
 
         return () => {
-
-        }
-    }, [])
+            isCurrent = false;
+        };
+    }, [id, location.state]);
 
 
     return (
@@ -118,41 +148,46 @@ const navigate = useNavigate()
             <h1 className='text-2xl font-bold'>Update Product</h1>
             <form className='form' name='upload_file' onSubmit={handleFormSubmit}>
                 <div className='image-section flex flex-col p-5 bg-white w-80 rounded-xl shadow-xl' >
+                    {formData.image && (
+                        <img src={formData.image} alt="Current product" className="mb-3 h-32 w-32 rounded-lg object-cover" />
+                    )}
                     <input type="file" id='image' onChange={handleFileChange} />
                     <button type='button' onClick={handleSubmit} disabled={isUploading} className='w-32 my-5 py-2 bg-teal-200 rounded-lg shadow-xl' > {isUploading ? 'Uploading...' : progressPercent === 100 ? 'Uploaded' : 'Upload Image'}</button>
                     <progress value={progressPercent} className='h-1 rounded-xl' max="100" />
                 </div>
+                {isLoading && <p role="status">Loading product details...</p>}
+                {loadError && <p role="alert" className="text-red-600">{loadError}</p>}
                 <div className="flex flex-wrap gap-3 p-5 my-5 bg-white w-full rounded-xl shadow-xl">
                     <div>
                         <h1>Name</h1>
-                        <input type="text" required placeholder="name" id="name" value={formData.name} onChange={formChange} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
+                        <input type="text" required placeholder="name" id="name" value={formData.name} onChange={formChange} disabled={isLoading || Boolean(loadError)} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
                     </div>
                     <div>
                         <h1 >Description</h1>
-                        <textarea type="text" required placeholder="description" value={formData.description} id="description" onChange={formChange} className="px-5 py-2 resize-none w-96 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none" />
+                        <textarea type="text" required placeholder="description" value={formData.description} id="description" onChange={formChange} disabled={isLoading || Boolean(loadError)} className="px-5 py-2 resize-none w-96 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none" />
                     </div>
                     <div>
                         <h1>Price</h1>
-                        <input type="number" required placeholder="price" id="price" value={formData.price} onChange={formChange} className="px-5 py-2 max-w-28 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
+                        <input type="number" required placeholder="price" id="price" value={formData.price} onChange={formChange} disabled={isLoading || Boolean(loadError)} className="px-5 py-2 max-w-28 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
                     </div>
                     <div>
                         <h1 >Discount</h1>
-                        <input type="number" required placeholder="discount" id="discount" value={formData.discount} onChange={formChange} className="px-5 py-2 max-w-28 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
+                        <input type="number" required placeholder="discount" id="discount" value={formData.discount} onChange={formChange} disabled={isLoading || Boolean(loadError)} className="px-5 py-2 max-w-28 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
                     </div>
                     <div>
                         <h1 >Stock</h1>
-                        <input type="number" required placeholder="stock" id="stock" value={formData.stock} onChange={formChange} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
+                        <input type="number" required placeholder="stock" id="stock" value={formData.stock} onChange={formChange} disabled={isLoading || Boolean(loadError)} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
                     </div>
                     <div>
                         <h1 >Seller</h1>
-                        <input type="text" required placeholder="seller" id="seller" value={formData.seller} onChange={formChange} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
+                        <input type="text" required placeholder="seller" id="seller" value={formData.seller} onChange={formChange} disabled={isLoading || Boolean(loadError)} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
                     </div>
                     <div>
                         <h1 >Category</h1>
-                        <input type="text" required placeholder="category" id="category" value={formData.category} onChange={formChange} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
+                        <input type="text" required placeholder="category" id="category" value={formData.category} onChange={formChange} disabled={isLoading || Boolean(loadError)} className="px-5 py-2 bg-transparent shadow-xl rounded-lg bg-violet-200 outline-none " />
                     </div>
                 </div>
-                <input className="m-5 bg-fuchsia-200 px-5 py-2 rounded-lg shadow-xl cursor-pointer" type="submit" value="Update Product" disabled={isUploading} />
+                <input className="m-5 bg-fuchsia-200 px-5 py-2 rounded-lg shadow-xl cursor-pointer" type="submit" value="Update Product" disabled={isLoading || Boolean(loadError) || isUploading} />
             </form>
 
         </div>

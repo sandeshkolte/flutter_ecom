@@ -9,6 +9,10 @@ from other projects using the same Cloudinary account. `.env.example` lists the
 variable names. Keep the API secret on the server; neither client should
 contain Cloudinary credentials.
 
+For Vercel deployments, configure these variables in the backend project's
+Environment Variables settings and redeploy. A local `.env` file is not
+automatically included in the deployment.
+
 The admin panel and Flutter app upload multipart image files to
 `POST /products/upload-image`. The endpoint accepts JPEG, PNG, WEBP, and GIF
 images up to 10 MB and responds with the Cloudinary `url` to save on the

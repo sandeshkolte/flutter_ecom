@@ -105,7 +105,7 @@ const DashBoard = () => {
                                 <h3 className="col-span-1">{product.stock}</h3>
                                 <h3 className="col-span-1">{product.category}</h3>
                                 <div className="col-span-1 flex flex-col space-y-2">
-                                    <Link className="rounded-lg text-center py-1" to={`/update/${product._id}`}>
+                                    <Link className="rounded-lg text-center py-1" to={`/update/${product._id}`} state={{ product }}>
                                         <i className="ri-edit-box-line px-2 py-1 bg-gray-100 rounded-lg"></i>
                                     </Link>
                                     <button className="rounded-lg text-center py-1" onClick={() => deleteItem(product._id)}>
