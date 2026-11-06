@@ -13,6 +13,11 @@ For Vercel deployments, configure these variables in the backend project's
 Environment Variables settings and redeploy. A local `.env` file is not
 automatically included in the deployment.
 
+Set `ADMIN_PANEL_ORIGIN` to the exact deployed React admin panel origin (or a
+comma-separated list of allowed origins) in the backend environment. This is
+required for credentialed login cookies; `http://localhost:5173` is allowed for
+local development.
+
 The admin panel and Flutter app upload multipart image files to
 `POST /products/upload-image`. The endpoint accepts JPEG, PNG, WEBP, and GIF
 images up to 10 MB and responds with the Cloudinary `url` to save on the

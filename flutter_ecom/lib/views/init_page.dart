@@ -17,14 +17,13 @@ class InitPageState extends State<InitPage> with TickerProviderStateMixin {
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/background.jpg'),
+            image: DecorationImage(image: AssetImage("assets/images/background.jpg"),
                 fit: BoxFit.cover)),
         child: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(begin: Alignment.bottomRight, colors: [
-            Colors.black.withOpacity(.9),
-            Colors.black.withOpacity(.4),
+            Colors.black.withValues(alpha: .9),
+            Colors.black.withValues(alpha: .4),
           ])),
           child: Padding(
             padding: const EdgeInsets.all(30.0),
@@ -76,7 +75,7 @@ class InitPageState extends State<InitPage> with TickerProviderStateMixin {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacementNamed(context, '/login');
+                    Navigator.pushReplacementNamed(context, '/newhome');
                   },
                   child: FadeInUp(
                       duration: const Duration(milliseconds: 1700),

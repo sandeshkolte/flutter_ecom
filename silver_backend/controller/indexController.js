@@ -1,5 +1,4 @@
 
-const productModel = require('../models/product')
 
 // Routes
 const home =  async(req,res)=>{

@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+// import 'package:flutter/widgets.dart';
 import 'package:flutter_ecom/provider/wishlist_provider.dart';
 import 'package:flutter_ecom/theme/themes.dart';
 import 'package:flutter_ecom/widgets/app-banners.dart';
@@ -17,7 +17,7 @@ class NewHome extends StatefulWidget {
 }
 
 class _NewHomeState extends State<NewHome> {
-  final _controller = CarouselController();
+  late final _controller = CarouselSliderController();
   // final wishListProvider = WishListProvider();
 
   @override
@@ -143,14 +143,14 @@ class _MyCustomTabState extends State<MyCustomTab> {
                   Tab(
                     child: Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 6),
+                          const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
                       child: const Text("Trending"),
                     ),
                   ),
                   Tab(
                     child: Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 6),
+                          const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
                       child: const Text("Offers"),
                     ),
                   ),

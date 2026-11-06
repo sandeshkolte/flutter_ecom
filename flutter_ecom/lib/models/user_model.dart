@@ -8,7 +8,7 @@ class User {
   String email;
   List<CartModel> cart;
   List<CartModel> orders;
-
+ 
   User({
     required this.id,
     required this.username,

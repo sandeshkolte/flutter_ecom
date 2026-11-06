@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { baseUrl, uploadProductImage } from '../common';
+import { api, baseUrl, uploadProductImage } from '../common';
 
 
 const UpdateProduct = () => {
@@ -84,7 +83,7 @@ const UpdateProduct = () => {
             return;
         }
         try {
-            await axios.post(baseUrl+`update/${id}`, formData);
+            await api.post(baseUrl+`update/${id}`, formData);
             toast.success("Product Updated Successfully!");
             navigate('/');
         } catch (err) {
@@ -106,7 +105,7 @@ const UpdateProduct = () => {
                     : null;
 
                 if (!product) {
-                    const { data } = await axios.get(baseUrl);
+                    const { data } = await api.get(baseUrl);
                     const products = data.response ?? data.products;
                     product = Array.isArray(products)
                         ? products.find((item) => item._id === id)

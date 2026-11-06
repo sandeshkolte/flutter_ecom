@@ -46,6 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
             'password': pass,
           }),
         );
+        if (!context.mounted) return;
 
         if (response.statusCode == 200) {
           var decodedData = jsonDecode(response.body);
@@ -55,12 +56,27 @@ class _RegisterPageState extends State<RegisterPage> {
           showSnakBar('Registration successful!', context);
           Navigator.pushReplacementNamed(context, '/home');
         } else {
-          debugPrint("Failed data sending ${response.statusCode}");
-          showSnakBar(
-              'Failed to register. Code: ${response.statusCode}', context);
+          var errorMessage =
+              'Failed to register. Code: ${response.statusCode}';
+          try {
+            final errorData = jsonDecode(response.body);
+            if (errorData is Map<String, dynamic>) {
+              final responseMessage = errorData['response'];
+              if (responseMessage is String &&
+                  responseMessage.trim().isNotEmpty) {
+                errorMessage = responseMessage;
+              }
+            }
+          } on FormatException {
+            debugPrint('Registration error response: ${response.body}');
+          }
+          debugPrint(
+              'Registration failed (${response.statusCode}): ${response.body}');
+          showSnakBar(errorMessage, context);
         }
       } catch (e) {
         debugPrint(e.toString());
+        if (!context.mounted) return;
         showSnakBar('Error: $e', context);
       }
     }

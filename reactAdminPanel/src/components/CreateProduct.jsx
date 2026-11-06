@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import axios from 'axios'
 import { toast } from 'react-toastify';
-import { baseUrl, uploadProductImage } from '../common';
+import { api, baseUrl, uploadProductImage } from '../common';
 
 
 const CreateProduct = () => {
@@ -65,22 +64,20 @@ const CreateProduct = () => {
     }
 
     try {
-      await axios.post(baseUrl + 'create', formData).then((response) => {
-        console.log(`Form uploaded with data:`, response)
-        toast.success("Product Created Successfully!")
-        setformData({
-          name: "",
-          description: '',
-          price: '',
-          discount: '',
-          stock: '',
-          seller: '',
-          category: '',
-          image: ''
-        });
-        setSelectedFile(null);
-        setProgressPercent(0);
-      })
+      await api.post(baseUrl + 'create', formData);
+      toast.success("Product Created Successfully!")
+      setformData({
+        name: "",
+        description: '',
+        price: '',
+        discount: '',
+        stock: '',
+        seller: '',
+        category: '',
+        image: ''
+      });
+      setSelectedFile(null);
+      setProgressPercent(0);
     } catch (err) {
       toast.error(err.response?.data?.response || err.message || 'Product creation failed.');
     }

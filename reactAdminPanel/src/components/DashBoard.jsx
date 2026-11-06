@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { baseUrl } from '../common';
+import { toast } from 'react-toastify';
+import { api, baseUrl } from '../common';
 
 const DashBoard = () => {
     const [products, setProducts] = useState([]);
@@ -11,13 +11,11 @@ const DashBoard = () => {
     const fetchProducts = async () => {
         try {
             setIsLoading(true); // Start loading
-            const { data } = await axios.get(baseUrl); // Fetch data
+            const { data } = await api.get(baseUrl); // Fetch data
             setProducts(data.response); // Set the fetched data
             setError(null); // Clear any previous errors
         } catch (error) {
-            if (!axios.isCancel(error)) {
-                setError(error.message); // Handle and set the error message
-            }
+            setError(error.response?.data?.response || error.message); // Handle and set the error message
         } finally {
             setIsLoading(false); // Turn off loading indicator
         }
@@ -25,14 +23,12 @@ const DashBoard = () => {
 
     const deleteItem = async (id) => {
         try {
-            await axios.get(`${baseUrl}/delete/?id=${id}`).then((response) => {
-                toast.success("Product Deleted Successfully!")
-            }).finally(()=> fetchProducts()); // Use DELETE method
+            await api.get(`${baseUrl}delete/?id=${id}`);
+            toast.success("Product Deleted Successfully!")
+            await fetchProducts();
            
         } catch (error) {
-            if (!axios.isCancel(error)) {
-                console.error("Failed to delete:", error.message);
-            }
+            toast.error(error.response?.data?.response || error.message || "Failed to delete product.");
         }
     };
 

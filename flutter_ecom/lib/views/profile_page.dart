@@ -24,8 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final response = await http.get(Uri.parse('$baseUrl/users/logout'));
       debugPrint(response.body.toString());
       if (response.statusCode == 200) {
-        final decodedData = jsonDecode(response.body);
-        final data = decodedData["response"];
+        jsonDecode(response.body);
         sharedPref.setUid("");
         var uid = await sharedPref.getUid();
         debugPrint("User uid set to $uid");

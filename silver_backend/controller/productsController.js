@@ -122,7 +122,7 @@ const updateProduct = async (req, res) => {
         image,
         name, price, discount, description, seller, stock, category
       },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     res.status(200).json({

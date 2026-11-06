@@ -1,7 +1,7 @@
 import React from 'react'
-import {Link, NavLink} from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
-const Aside = () => {
+const Aside = ({ onLogout }) => {
   return (
     <>
     <div className='bg-white w-30'>
@@ -33,6 +33,9 @@ const Aside = () => {
             </li>
           
           </ul>
+          <button type="button" onClick={onLogout} className="mt-8 w-full rounded-md bg-gray-100 px-5 py-2 text-left font-semibold">
+            <i className="ri-logout-box-line pr-2"></i>Sign out
+          </button>
       {/* <h1 className='text-sky-500 text-sm'>Admin Panel</h1>
       <Link to='/profile' className='text-teal-300' >Change to Profile</Link> */}
         </div>

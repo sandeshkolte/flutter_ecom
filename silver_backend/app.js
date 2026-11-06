@@ -15,7 +15,21 @@ const app = express();
 const PORT = process.env.PORT || 9000;
 
 // Middleware
-app.use(cors());
+const allowedOrigins = (process.env.ADMIN_PANEL_ORIGIN || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+allowedOrigins.push('http://localhost:5173', 'http://127.0.0.1:5173');
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Origin is not allowed by CORS.'));
+  },
+  credentials: true,
+}));
 app.set("view engine", "ejs")
 app.use(appLogger);
 app.use(cookieParser());
